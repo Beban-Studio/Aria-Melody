@@ -1,4 +1,5 @@
-<img src="https://ik.imagekit.io/bebanserver/Banners/Aria%20Melody%20_Banner_no3.png?updatedAt=1725647322974" />
+<img src="https://github.com/user-attachments/assets/d710e646-f276-444f-ae63-d99aed5bb58e" />
+
 
 ---
 <p align="center">Aria Melody is a simple music bot which is made with Riffy package</p>
