@@ -1,8 +1,8 @@
-<img src="https://github.com/user-attachments/assets/d710e646-f276-444f-ae63-d99aed5bb58e" />
+<img src="https://ik.imagekit.io/bebanserver/Banners/Aria%20Melody%20_Github%20Repo_.svg" />
 
 
 ---
-<p align="center">Aria Melody is a simple music bot which is made with Riffy package</p>
+<p align="center">Aria Melody is a simple music bot which is made using Riffy package</p>
 
 <p align="center">
     <a href="https://github.com/BebanCode/Aria-Melody"><b>Github</b></a> •
