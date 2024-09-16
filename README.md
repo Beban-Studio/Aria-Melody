@@ -1,4 +1,4 @@
-<img src="https://ik.imagekit.io/bebanserver/Banners/Aria%20Melody%20_Github%20Repo_.svg" />
+<img src="Aria Melody.svg" />
 
 
 ---
