@@ -9,8 +9,10 @@ clientId,
 nodes
 } = require("./config");
 const { Client, GatewayIntentBits, GatewayDispatchEvents } = require("discord.js");
+const { readdirSync } = require("fs");
 const { CommandKit } = require("commandkit");
 const { Spotify } = require("riffy-spotify");
+const { connect } = require("mongoose")
 const { logger } = require("./utils/logger")
 const { Riffy } = require("riffy");
 const path = require("path");
@@ -34,7 +36,6 @@ new CommandKit({
     validationsPath: path.join(__dirname, "validations"),
     devUserIds: developers,
     skipBuiltInValidations: true,
-    bulkRegister: true,
 });
 
 // CREATING RIFFY CLIENT
@@ -49,6 +50,7 @@ client.riffy = new Riffy(client, nodes, {
     restVersion: "v4",
     plugin: [spotify]
 });
+module.exports = client;
 
 // LOGIN TO THE BOT
 client.login(client_token);
@@ -57,10 +59,10 @@ client.on("raw", (d) => {
     client.riffy.updateVoiceState(d);
 });
 
-async () => {
+(async () => {
     await load_riffy()
     await load_db()
-}
+})()
 
 // FUNCTION TO LOAD MONGODB 
 async function load_db() {
@@ -95,5 +97,4 @@ async function load_riffy() {
             }
         }
     });
-}
-module.exports = client;
+};

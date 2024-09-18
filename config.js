@@ -13,13 +13,14 @@ module.exports = {
     nodes: [
         {
             name: "Lavalink v4",
-            host: "node-v4.beban.tech",
-            port: 80,
-            password: "dsc.gg/bebancommunity",
+            host: "5.255.104.252",
+            port: 2233,
+            password: "LittleStar42",
             secure: false
         },
         /*
         {
+            DEAD
             name: "Lavalink v3",
             host: "node-v3.beban.tech",
             port: 80,
