@@ -6,9 +6,11 @@ client_token,
 mongodb_url, 
 developers, 
 clientId,
-nodes
-} = require("./config");
-const { Client, GatewayIntentBits, GatewayDispatchEvents } = require("discord.js");
+nodes } = require("./config");
+const { 
+    Client, 
+    GatewayIntentBits, 
+    GatewayDispatchEvents } = require("discord.js");
 const { readdirSync } = require("fs");
 const { CommandKit } = require("commandkit");
 const { Spotify } = require("riffy-spotify");
@@ -36,6 +38,7 @@ new CommandKit({
     validationsPath: path.join(__dirname, "validations"),
     devUserIds: developers,
     skipBuiltInValidations: true,
+    bulkRegister: true,
 });
 
 // CREATING RIFFY CLIENT

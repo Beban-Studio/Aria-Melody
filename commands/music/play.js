@@ -1,4 +1,7 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("discord.js");
+const { 
+	SlashCommandBuilder, 
+	PermissionFlagsBits, 
+	EmbedBuilder } = require("discord.js");
 const { default_color } = require("../../config")
 const { logger } = require("../../utils/logger");
 
@@ -25,7 +28,7 @@ module.exports = {
    	const query = interaction.options.getString("query");
 
    	const players = client.riffy.createConnection({
-			defaultVolume: 50,
+		defaultVolume: 50,
       	guildId: interaction.guild.id,
       	voiceChannel: interaction.member.voice.channel.id,
       	textChannel: interaction.channel.id,
