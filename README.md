@@ -12,7 +12,7 @@
 </p>
 
 <div align="center">
-  <a href="https://www.npmjs.com/package/riffy"><img src="https://img.shields.io/badge/Riffy-1.0.7_rc.1-blue" />
+  <a href="https://www.npmjs.com/package/riffy"><img src="https://img.shields.io/badge/Riffy-1.0.7_rc.2-blue" />
 </div>
 <p align="center"> 
   <a href="https://discord.gg/9eCgpGuZAa" target="_blank"> <img src="https://discordapp.com/api/guilds/1215235509958479894/widget.png?style=banner2"/> </a>
@@ -21,7 +21,8 @@
 #
 
 ## 📚 Features
--   🎻 Using **[Riffy](https://www.npmjs.com/package/riffy) `v1.0.7-rc.1`** Lavalink Client
+-   🎻 Using **[Riffy](https://www.npmjs.com/package/riffy) `v1.0.7-rc.2`** Lavalink Client
+-   🌊 Support Lavalink v3 & v4 Connection
 -   🍸️ Slash Command
 -   🎵 Music System
 -   🎙️ Lots of Sound Filters
@@ -45,6 +46,7 @@ Distributed under the MIT License. See [LICENSE](https://github.com/Beban-Studio
 
 ## 👥 Contributors
 We really appreciated if you guys can contribute to this project. To contribute to this project you can fork this repository and make a pull request, we will gladly check it out. If you have any suggestion or want to report any bug you can join this [server](https://discord.gg/9eCgpGuZAa)
+
 <a href="https://github.com/Beban-Studio/Aria-Melody/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=beban-studio/aria-melody" />
 </a>
