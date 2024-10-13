@@ -1,32 +1,27 @@
 require("dotenv").config();
 /* 
 FILL IN ALL THE REQUIRED INFO
-
 */
 module.exports = {
     client_token: process.env.CLIENT_TOKEN || "", // REQUIRED The bot's Token
     client_id: process.env.CLIENT_ID || "", // REQUIRED The Bot's Id
-    default_color: process.env.DEFAULT_COLOR || "", // THE BOT'S DEFAULT EMBED COLOR ( HEX COLOR CODE )
+    default_color: process.env.DEFAULT_COLOR || "", // REQUIRED The bot's default embed color code ( hex color code )
     mongodb_url: process.env.MONGO_URI || "", // REQUIRED Mongodb Url
-    developers: process.env.DEV_ID || "", // REQUIRED Developer Id
-    defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch", // REQUIRED ( This Can Be spsearch, ytsearch, ytmsearc, scsearch )
+    developers: process.env.DEV_ID || "", // REQUIRED Developer Id ( can be an array )
+    support_server:  process.env.SUPPORT_SERVER || "", // REQUIRED Support Server Id
+    defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch", // REQUIRED ( this Can Be spsearch, ytsearch, ytmsearc, scsearch )
     nodes: [
         {
             name: "Lavalink v4",
-            host: "5.255.104.252",
-            port: 2233,
-            password: "LittleStar42",
-            secure: false
+            host: "node-us.beban.tech",
+            port: 80,
+            password: "dsc.gg/bebancommunity",
+            secure: false,
+            reconnectTimeout: 5000,
+            reconnectTries: 15
         },
         /*
-        {
-            DEAD
-            name: "Lavalink v3",
-            host: "node-v3.beban.tech",
-            port: 80,
-            password: "discord.gg/codersplanet",
-            secure: false
-        },
+            CHECK OUT THE AVAILABLE LAVALINK SERVER ON https://uptime.beban.tech/status/servers
         */
     ],
     spotify: {

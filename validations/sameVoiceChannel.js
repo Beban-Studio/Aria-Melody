@@ -1,13 +1,14 @@
 // This makes the command cannot be executed when member is not on the same vc as the bot
-module.exports = ({ interaction, commandObj }) => {
-	const memberChannel = interaction.member.voice.channel.id;
-	const clientChannel = interaction.guild.members.me.voice.channelId;
-	if (commandObj.sameVoice && memberChannel !== clientChannel) {
-		interaction.reply({
-			content: `\`❌\` | You must be on the same voice channel as me to use this command.`,
-			ephemeral: true,
-		});
-	// This must be added to stop the command from being executed.
-	return true;
-	}
+module.exports = (interaction, commandObj) => {
+    const memberChannel = interaction.member.voice.channel
+	const player = client.riffy.players.get(interaction.guildId);
+    if (commandObj.sameVoice) {
+		if (!player) {
+			return interaction.reply({ content: "\`❌\` | No active player found.", ephemeral: true });
+		}
+
+		if (player.voiceChannel !== memberChannel) {
+			return interaction.reply({ content: "\`❌\` | You must be in the same voice channel as the bot.", ephemeral: true });
+		}
+    } 
 };

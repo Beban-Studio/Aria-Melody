@@ -2,25 +2,25 @@ const {
 	SlashCommandBuilder, 
 	PermissionFlagsBits, 
 	EmbedBuilder } = require("discord.js");
-const { default_color } = require("../../config")
+const { default_color } = require("../../config");
 const { logger } = require("../../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
    	.setName("play")
    	.setDescription("Play a track/playlist")
-    	.addStringOption(option => 
+    .addStringOption(option => 
       	option.setName("query")
       	.setDescription("The song name/url")
       	.setRequired(true)
-    	),
+    ),
 
 	run: async ({ interaction, client }) => {
    	if (!interaction.guild.members.me.permissionsIn(interaction.channel).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])) {
-   		return interaction.reply({ content: '\`❌\` | Bot can\'t access the channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server', ephemeral: true })
+   		return interaction.reply({ content: "\`❌\` | Bot can\'t access the channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server", ephemeral: true })
    	}
    	if (!interaction.guild.members.me.permissionsIn(interaction.member.voice.channel.id).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
-      	return interaction.reply({ content: '\`❌\` | Bot can\'t connect to the voice channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server', ephemeral: true })
+      	return interaction.reply({ content: "\`❌\` | Bot can\'t connect to the voice channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server", ephemeral: true })
    	}
    	await interaction.deferReply();
 
@@ -39,13 +39,13 @@ module.exports = {
    	const { loadType, tracks, playlistInfo } = resolve;
 
    	if (loadType === "playlist") {
-      	const embed = new EmbedBuilder()
-      		.setColor(default_color)
-        		.setDescription(`\`➕\` | **[${playlistInfo.name}](${query})** • ${interaction.member}`);
       	for (const track of resolve.tracks) {
          	track.info.requester = interaction.member;
          	players.queue.add(track);
       	}
+      	const embed = new EmbedBuilder()
+      		.setColor(default_color)
+        	.setDescription(`\`➕\` | **[${playlistInfo.name}](${query})** • ${tracks.length} Track(s) • ${interaction.member}`);
 
       	await interaction.editReply({ embeds: [embed] });
       	if (!players.playing && !players.paused) return players.play();
@@ -63,7 +63,7 @@ module.exports = {
       	if (!players.playing && !players.paused) return players.play();
 
    	} else {
-      	return interaction.editReply(`\`❌\` | There were no results found for your query.`);
+      	return interaction.editReply("\`❌\` | There were no results found for your query.");
    	}
   	},
 	options: {

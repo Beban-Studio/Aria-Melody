@@ -9,6 +9,6 @@ module.exports = ({ interaction, commandObj }) => {
 			});
 		// This must be added to stop the command from being executed.
 		return true;
-	  }
+	  	}
 	}
 };

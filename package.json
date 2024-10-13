@@ -1,11 +1,11 @@
 {
   "name": "aria-melody",
   "description": "Aria Melody is a simple music bot which is made using Riffy package.",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "main": "Aria.js",
   "scripts": {
     "start": "node Aria.js",
-    "destroy": "node data/destroyScript.js"
+    "flushCommands": "node utils/commandFlush.js"
   },
   "author": "Beban-Studio",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "moment": "^2.30.1",
     "mongoose": "^8.6.3",
     "node-capitalize": "^1.0.0",
+    "node-fetch": "^2.7.0",
     "riffy": "^1.0.7-rc.2",
     "riffy-spotify": "^1.0.2"
   }
