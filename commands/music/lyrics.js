@@ -30,7 +30,10 @@ module.exports = {
                 .then((res) => res.json())
                 .then((data) => {
                     const lyricSong = data.lyrics;
-                    const lyricUrl = data.links?.genius;
+                    let lyricUrl;
+                    if (data.links.genius) {
+                        lyricUrl = `**[Click Here For More](${data.links.genius})**`
+                    } 
                     if (!lyricSong) {
                         return interaction.editReply({ content: "\`❌\` | Lyrics was not found." });
                     }
@@ -44,7 +47,7 @@ module.exports = {
                             iconURL: client.user.displayAvatarURL({ dynamic: true }),
                         })
                         .setColor(config.default_color)
-                        .setDescription(`${lyrics}\n**[Click Here For More](${lyricUrl})**`);
+                        .setDescription(`${lyrics}\n${lyricUrl}`);
 
                     return interaction.editReply({ embeds: [lyricEmbed] });
                 });
