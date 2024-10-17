@@ -3,29 +3,24 @@ const { logger } = require("../../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("volume")
-   	.setDescription("Set the player\'s volume")
-    .addIntegerOption(option =>
-        option.setName("value")
-        .setDescription("The player\'s volume ( 1 - 150 )")
-        .setRequired(true)
-    ),
+   	.setName("previous")
+   	.setDescription("Play the previous track"),
 
     run: async ({ interaction, client }) => {
         try {
             const player = client.riffy.players.get(interaction.guildId);
-            const volume = interaction.options.getInteger('value');
 
             if (!player) {
                 return interaction.reply({ content: "\`❌\` | No active player found.", ephemeral: true });
             }
 
-            if (volume < 0 || volume > 150) {
-                return interaction.reply({ content: "\`❌\` | Volume level must be between 0 and 150.", ephemeral: true });
+            if (!player.previous) {
+                await interaction.reply({ content: "\`❌\` | Previous song was: \`Not found\`.", ephemeral: true });
+                return;
             }
 
-            player.setVolume(volume);
-            return interaction.reply({ content: `\`🔊\` | Volume set to ${volume}%` });
+            await player.queue.unshift(player.previous);
+            player.stop();
 
         } catch (err) {
             logger(err, "error");
