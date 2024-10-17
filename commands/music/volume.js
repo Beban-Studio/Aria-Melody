@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { logger } = require("../../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,8 +11,6 @@ module.exports = {
     ),
 
     run: async ({ interaction, client }) => {
-    logger(`</> /volume used by ${interaction.user.tag} on ${interaction.guild} (${interaction.guildId})`, "info");
-
         try {
             const player = client.riffy.players.get(interaction.guildId);
             const volume = interaction.options.getInteger('value');

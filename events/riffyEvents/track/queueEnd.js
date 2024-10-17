@@ -4,7 +4,7 @@ client.riffy.on("queueEnd", async (player) => {
     const channel = client.channels.cache.get(player.textChannel);
     
     if (player.message) try {
-        await player.message.delete();
+        await player.message.delete().catch((e) => {});
     } catch (err) {
         logger(err, "error");
     }

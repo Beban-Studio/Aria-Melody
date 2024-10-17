@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { logger } = require("../../utils/logger");
 const config = require("../../config");
 const fetch = require("node-fetch");
 
@@ -12,9 +11,7 @@ module.exports = {
         .setDescription("Song name")
     ),
 
-    run: async ({ interaction, client }) => {
-    logger(`</> /lyrics used by ${interaction.user.tag} on ${interaction.guild} (${interaction.guildId})`, "info");
-    
+    run: async ({ interaction, client }) => {    
         try {
             await interaction.deferReply();
             const player = client.riffy.players.get(interaction.guildId);

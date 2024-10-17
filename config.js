@@ -1,7 +1,7 @@
 require("dotenv").config();
-/* 
-FILL IN ALL THE REQUIRED INFO
-*/
+/** 
+ *FILL IN ALL THE REQUIRED INFO
+ */
 module.exports = {
     client_token: process.env.CLIENT_TOKEN || "", // REQUIRED The bot's Token
     client_id: process.env.CLIENT_ID || "", // REQUIRED The Bot's Id
@@ -20,12 +20,33 @@ module.exports = {
             reconnectTimeout: 5000,
             reconnectTries: 15
         },
-        /*
-            CHECK OUT THE AVAILABLE LAVALINK SERVER ON https://uptime.beban.tech/status/servers
-        */
+        /** 
+         *  CHECK OUT THE AVAILABLE LAVALINK SERVER ON https://uptime.beban.tech/status/servers
+         */
     ],
     spotify: {
         clientId: "PUT_YOUR_SPOTIFY_ID_HERE", // https://developer.spotify.com/
         ClientSecret: "PUT_YOUR_SPOTIFY_SECRET_HERE" // https://developer.spotify.com/
-    }
+    },
+	presence: {
+		/**
+		 * online, idle, dnd, invisible, ...
+		 */
+		status: "online",
+		activities: [
+			{
+				name: "{Guilds} servers",
+				type: "WATCHING",
+				data: (client) => {
+					return {
+						Guilds: client.guilds.cache.size,
+					};
+				},
+			},
+			{
+				name: "Music",
+				type: "LISTENING",
+			},
+		],
+	},
 }

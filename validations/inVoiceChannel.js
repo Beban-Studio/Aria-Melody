@@ -1,14 +1,12 @@
-// This makes the command cannot be executed when member is not in a vc
+// This makes the command cannot be executed when member is not in a voice channel
 module.exports = ({ interaction, commandObj }) => {
-    const memberChannel = interaction.member.voice.channelId
-    if (commandObj.options.inVoice) {
+    const memberChannel = interaction.member.voice.channelId;
+    if (commandObj.options?.inVoice) {
         if (!memberChannel) {
-            interaction.reply({
+            return interaction.reply({
                 content: `\`❌\` | You must be in a voice channel to use this command.`,
-                ephemeral: true,
+                ephemeral: true
             });
-        // This must be added to stop the command from being executed.
-        return true;
         }
     }
 };

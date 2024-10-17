@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { logger } = require("../../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,8 +6,6 @@ module.exports = {
    	.setDescription("Pause the current track"),
 
     run: async ({ interaction, client }) => {
-    logger(`</> /pause used by ${interaction.user.tag} on ${interaction.guild} (${interaction.guildId})`, "info");
-
         try {
             const player = client.riffy.players.get(interaction.guild.id);
 

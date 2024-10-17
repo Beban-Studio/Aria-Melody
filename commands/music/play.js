@@ -3,7 +3,6 @@ const {
 	PermissionFlagsBits, 
 	EmbedBuilder } = require("discord.js");
 const { default_color } = require("../../config");
-const { logger } = require("../../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,6 +11,7 @@ module.exports = {
     .addStringOption(option => 
       	option.setName("query")
       	.setDescription("The song name/url")
+		.setAutocomplete(true)
       	.setRequired(true)
     ),
 
@@ -24,7 +24,6 @@ module.exports = {
    	}
    	await interaction.deferReply();
 
-   	logger(`</> /play used by ${interaction.user.tag} on ${interaction.guild} (${interaction.guildId})`, "info");
    	const query = interaction.options.getString("query");
 
    	const players = client.riffy.createConnection({

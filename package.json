@@ -19,6 +19,7 @@
     "node-capitalize": "^1.0.0",
     "node-fetch": "^2.7.0",
     "riffy": "^1.0.7-rc.2",
-    "riffy-spotify": "^1.0.2"
+    "riffy-spotify": "^1.0.2",
+    "youtube-sr": "^4.3.11"
   }
 }
