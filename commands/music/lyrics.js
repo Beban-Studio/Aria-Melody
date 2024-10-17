@@ -1,6 +1,8 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { logger } = require("../../models/logger");
 const config = require("../../config");
 const fetch = require("node-fetch");
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,7 +30,7 @@ module.exports = {
                 .then((res) => res.json())
                 .then((data) => {
                     const lyricSong = data.lyrics;
-                    const lyricUrl = data.links.genius;
+                    const lyricUrl = data.links?.genius;
                     if (!lyricSong) {
                         return interaction.editReply({ content: "\`❌\` | Lyrics was not found." });
                     }
