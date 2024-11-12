@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { logger } = require("../../utils/logger.js");
-const Reconnect = require("../../Schemas/247Connection");
+const Reconnect = require("../../schemas/247Connection");
 const config = require("../../config");
 
 module.exports = {

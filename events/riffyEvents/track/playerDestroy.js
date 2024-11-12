@@ -1,5 +1,5 @@
 const { logger } = require("../../../utils/logger");
-const Reconnect = require("../../../Schemas/247Connection");
+const Reconnect = require("../../../schemas/247Connection");
 const client = require("../../../Aria");
 
 client.riffy.on("playerDisconnect", async (player) => {

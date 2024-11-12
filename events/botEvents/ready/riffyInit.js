@@ -1,6 +1,6 @@
 const { client_id } = require("../../../config");
 const { logger } = require("../../../utils/logger");
-const Reconnect = require("../../../Schemas/247Connection");
+const Reconnect = require("../../../schemas/247Connection");
 const client = require("../../../Aria");
 
 module.exports = async () => {
