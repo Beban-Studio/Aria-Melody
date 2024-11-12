@@ -1,30 +1,42 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { logger } = require("../../utils/logger");
+const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
    	.setName("previous")
-   	.setDescription("Play the previous track"),
+   	.setDescription("Play the previous track")
+    .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
+        const embed = new EmbedBuilder().setColor(config.default_color);
+
         try {
             const player = client.riffy.players.get(interaction.guildId);
 
             if (!player) {
-                return interaction.reply({ content: "\`❌\` | No active player found.", ephemeral: true });
+                return interaction.reply({ 
+                    embeds: [embed.setDescription("\`❌\` | No player found in this server.")],  
+                    ephemeral: true 
+                });
             }
 
             if (!player.previous) {
-                await interaction.reply({ content: "\`❌\` | Previous song was: \`Not found\`.", ephemeral: true });
-                return;
+                return interaction.reply({ 
+                    embeds: [embed.setDescription("\`❌\` | Previous song was: \`Not found\`.")], 
+                    ephemeral: true 
+                });
             }
 
-            await player.queue.unshift(player.previous);
             player.stop();
+            return player.queue.unshift(player.previous);
 
         } catch (err) {
             logger(err, "error");
-            await interaction.reply({ content: `\`❌\` | An error occurred: ${err.message}`, ephemeral: true });
+            return interaction.reply({ 
+                embeds: [embed.setDescription(`\`❌\` | An error occurred: ${err.message}`)], 
+                ephemeral: true 
+            });
         }
     },
     options: {

@@ -5,6 +5,7 @@
   "main": "Aria.js",
   "scripts": {
     "start": "node Aria.js",
+    "deploy": "npm run flushCommands && npm start",
     "flushCommands": "node utils/commandFlush.js"
   },
   "author": "Beban-Studio",
@@ -15,10 +16,12 @@
     "discord.js": "^14.16.2",
     "dotenv": "^16.4.5",
     "moment": "^2.30.1",
+    "moment-duration-format": "^2.3.2",
     "mongoose": "^8.6.3",
     "node-capitalize": "^1.0.0",
     "node-fetch": "^2.7.0",
-    "riffy": "^1.0.7-rc.2",
+    "os": "^0.1.2",
+    "riffy": "https://pkg.pr.new/riffy-team/riffy@84a70ab",
     "riffy-spotify": "^1.0.2",
     "youtube-sr": "^4.3.11"
   }

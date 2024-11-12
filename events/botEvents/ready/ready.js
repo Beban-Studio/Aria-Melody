@@ -5,10 +5,10 @@ const config = require("../../../config");
 const colors = require("colors");
 
 module.exports = (client) => {
-   logger(`Succesfully logged in as ${colors.rainbow(`[${client.user.tag}]`)}`, "debug");
+	logger(`Successfully logged in as ${colors.rainbow(`[${client.user.tag}]`)}`, "debug");
 
-   const activities = config.presence.activities;
-   client.user.setStatus(config.presence.status);
+   	const activities = config.presence.activities;
+   	client.user.setStatus(config.presence.status);
 	setInterval(() => {
 		const index = Math.floor(Math.random() * activities.length);
 

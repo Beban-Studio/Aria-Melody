@@ -8,19 +8,25 @@ module.exports = {
 	data: new SlashCommandBuilder()
    	.setName("lyrics")
    	.setDescription("Display lyrics for current played song")
+    .setDMPermission(false)
     .addStringOption(option =>
         option.setName("song")
         .setDescription("Song name")
     ),
 
     run: async ({ interaction, client }) => {    
+        const embed = new EmbedBuilder().setColor(config.default_color);
+
         try {
             await interaction.deferReply();
             const player = client.riffy.players.get(interaction.guildId);
             const value = interaction.options.getString("song");
 
             if (!player && !value) {
-                return interaction.editReply({ content: "\`❌\` | No active player found." });
+                return interaction.editReply({ 
+                    embeds: [embed.setDescription("\`❌\` | No active player found.")], 
+                    ephemeral: true 
+                });
             }
 
             let song = value;
@@ -35,7 +41,7 @@ module.exports = {
                         lyricUrl = `**[Click Here For More](${data.links.genius})**`
                     } 
                     if (!lyricSong) {
-                        return interaction.editReply({ content: "\`❌\` | Lyrics was not found." });
+                        return interaction.editReply({ embeds: [embed.setDescription("\`❌\` | Lyrics was not found.")] });
                     }
 
                     const lyrics = lyricSong.length > 3905 ? lyricSong.substr(0, 3900) + "....." : lyricSong;
@@ -51,9 +57,13 @@ module.exports = {
 
                     return interaction.editReply({ embeds: [lyricEmbed] });
                 });
+                
         } catch (err) {
             logger(err, "error");
-            await interaction.editReply({ content: `\`❌\` | An error occurred: ${err.message}`, ephemeral: true });
+            return interaction.editReply({ 
+                embeds: [embed.setDescription(`\`❌\` | An error occurred: ${err.message}`)], 
+                ephemeral: true 
+            });
         }
     }
 };
