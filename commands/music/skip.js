@@ -5,7 +5,7 @@ const config = require("../../config");
 module.exports = {
 	data: new SlashCommandBuilder()
    	.setName("skip")
-   	.setDescription("Resume a paused track")
+   	.setDescription("Skip the current playing track")
     .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
