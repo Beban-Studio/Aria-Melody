@@ -35,6 +35,7 @@ client.riffy.on('trackStart', async (player, track) => {
     const trackDuration = track.info.isStream ? "LIVE" : formatDuration(track.info.length);
     const trackAuthor = track.info.author ? authors : "Unknown";
     const trackTitle = track.info.title ? titles : "Unknown";
+    const trackThumbnail = track.info.thumbnail ? track.info.thumbnail : client.user.displayAvatarURL;
 
     const startembed = new EmbedBuilder()
 		.setAuthor({
@@ -43,7 +44,7 @@ client.riffy.on('trackStart', async (player, track) => {
         })
         .setColor(default_color)
         .setTitle(trackTitle)
-        .setThumbnail(track.info.thumbnail)
+        .setThumbnail(trackThumbnail)
         .setURL(track.info.uri)
 		.addFields(
 			{ name: "Artist", value: `${trackAuthor}`, inline: true },
@@ -58,7 +59,7 @@ client.riffy.on('trackStart', async (player, track) => {
 
     const filter = (message) => {
         if (message.guild.members.me.voice.channel && message.guild.members.me.voice.channelId === message.member.voice.channelId)
-            return true;
+            return true;    
         else {
             message.reply({
                 content: `\`❌\` | You must be on the same voice channel as mine to use this button.`,

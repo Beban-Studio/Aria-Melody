@@ -10,7 +10,6 @@ client.riffy.on("playerDisconnect", async (player) => {
         const playerExist = client.riffy.players.get(player.guildId);
 
         if (data && !playerExist) {
-
             await client.riffy.createConnection({
                 guildId: data.GuildId, 
                 voiceChannel: data.VoiceChannelId, 
@@ -18,5 +17,5 @@ client.riffy.on("playerDisconnect", async (player) => {
                 deaf: true
             });
         }
-    }, 2000);
+    }, 500);
 });

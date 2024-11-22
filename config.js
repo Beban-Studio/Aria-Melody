@@ -27,11 +27,11 @@ module.exports = {
     /**
      * Developer | The bot developer's id to use dev only command
      */
-    developer_id: process.env.DEV_ID || ['924513396928434227'],
+    developer_id: [process.env.DEV_ID] || [''],
     /**
      * Developer channel | The bot development's channel id to use dev only command
      */
-    developer_guild: process.env.DEV_GUILD || ['1286304390839533598'],
+    developer_guild: [process.env.DEV_GUILD] || [''],
     /**
      * Default search platform | The default search platform of the music feature ( This can be spsearch, ytsearch, ytmsearch, scsearch )
      */
@@ -44,9 +44,9 @@ module.exports = {
     nodes: [
         {
             name: "Lavalink", // Don't change the name of the node if you don't know what you're doing
-            host: "node-us.beban.tech", // The hostname of the lavalink server
+            host: "lava-v4.beban.tech", // The hostname of the lavalink server
             port: 80,  // The port of the lavalink server
-            password: "dsc.gg/bebancommunity", // The password of lavalink server
+            password: "bytebee_", // The password of lavalink server
             secure: false, // Does the lavalink server use secure connection
             autoResume: true // Just keep this as true
         },

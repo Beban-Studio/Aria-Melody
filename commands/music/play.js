@@ -26,7 +26,6 @@ module.exports = {
 			return interaction.reply({ content: "\`❌\` | Bot can\'t connect to the voice channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server", ephemeral: true })
 		}
 
-	logger(`/play used by ${interaction.user.tag} on ${interaction.guild} (${interaction.guildId})`, "info");
    	await interaction.deferReply();
 
 	const embed = new EmbedBuilder().setColor(config.default_color);
