@@ -29,7 +29,7 @@ module.exports = {
      */
     developer_id: [process.env.DEV_ID] || [''],
     /**
-     * Developer channel | The bot development's channel id to use dev only command
+     * Developer guild | The bot development's guild id to use dev only command
      */
     developer_guild: [process.env.DEV_GUILD] || [''],
     /**
