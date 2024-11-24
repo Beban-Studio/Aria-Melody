@@ -21,7 +21,6 @@ module.exports = {
 				await data.deleteOne();
 				return interaction.editReply({ embeds: [embed.setDescription("\`📻\` | 247 Mode has been: \`Disabled\`")] });
 			} else if (!data) {
-                console.log(player.textChannel, player.voiceChannel)
 				const newData = await Reconnect.create({
 					GuildId: interaction.guildId,
 					TextChannelId: player.textChannel,
