@@ -13,8 +13,16 @@ module.exports = {
 		const embed = new EmbedBuilder().setColor(config.default_color);
 
 		try {
-			await interaction.deferReply({ ephemeral: false });
 			const player = client.riffy.players.get(interaction.guildId);
+
+			if (!player) {
+                return interaction.reply({ 
+                    embeds: [embed.setDescription("\`❌\` | No player found in this server.")],  
+                    ephemeral: true 
+                });
+            }
+
+			await interaction.deferReply({ ephemeral: false });
 			const data = await Reconnect.findOne({ GuildId: interaction.guildId });
 
 			if (data) {
@@ -32,7 +40,10 @@ module.exports = {
 			}
 		} catch (err) {
 			logger(err, "error");
-			return interaction.editReply({ content: `\`❌\` | An error occurred while processing your request. Please try again later.`, ephemeral: true });
+			return interaction.editReply({ 
+				embeds: [embed.setDescription(`\`❌\` | An error occurred: ${err.message}`)], 
+				ephemeral: true 
+			});
 		}
 	},
 	options: {

@@ -60,9 +60,50 @@ client.on("raw", (d) => {
 });
 
 (async () => {
+    await checkConfig()
     await load_riffy()
     await load_db()
 })()
+
+async function checkConfig() {
+    const requiredFields = [
+        'client_token',
+        'client_id',
+        'default_color',
+        'mongodb_url',
+        'developer_id',
+        'developer_guild',
+        'defaultSearchPlatform',
+        'spotify.ClientId',
+        'spotify.ClientSecret',
+        'nodes'
+    ];
+
+    const missingFields = [];
+
+    requiredFields.forEach(field => {
+        const keys = field.split('.');
+        let value = config;
+
+        for (const key of keys) {
+            value = value[key];
+            if (value === undefined) {
+                break;
+            }
+        }
+
+        if (value === "" || value === null || (Array.isArray(value) && value.length === 0)) {
+            missingFields.push(field);
+        }
+    });
+
+    if (missingFields.length > 0) {
+        logger(`Missing required configuration fields: ${missingFields.join(', ')}`, "error");
+        process.exit(1);
+    } else {
+        logger("All required configuration fields are filled", "success");
+    }
+}
 
 // FUNCTION TO LOAD MONGODB 
 async function load_db() {
