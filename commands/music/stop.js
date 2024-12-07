@@ -4,9 +4,9 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("stop")
-   	.setDescription("Stop the current track and destroy the player")
-    .setDMPermission(false),
+        .setName("stop")
+        .setDescription("Stop the current track and destroy the player")
+        .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
         const embed = new EmbedBuilder().setColor(config.default_color);

@@ -5,8 +5,8 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("restart")
-   	.setDescription("Restart the bot process."),
+   	    .setName("restart")
+   	    .setDescription("Restart the bot process."),
 
     run: async ({ interaction }) => {
         const embed = new EmbedBuilder().setColor(config.default_color);

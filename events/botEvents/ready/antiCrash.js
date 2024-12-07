@@ -22,5 +22,5 @@ module.exports = async () => {
         console.log("[AntiCrash] | [UncaughtExceptionMonitor_Logs] | [END] :");
     });
 
-    logger("AntiCrash Events Loaded!");
+    logger("Successfully loadded Anticrash");
 };

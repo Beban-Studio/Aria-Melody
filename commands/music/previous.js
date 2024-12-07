@@ -4,9 +4,9 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("previous")
-   	.setDescription("Play the previous track")
-    .setDMPermission(false),
+        .setName("previous")
+        .setDescription("Play the previous track")
+        .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
         const embed = new EmbedBuilder().setColor(config.default_color);

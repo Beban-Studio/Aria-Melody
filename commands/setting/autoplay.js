@@ -3,9 +3,9 @@ const { logger } = require("../../utils/logger");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("autoplay")
-   	.setDescription("Sets autoplay to the current player queue")
-    .setDMPermission(false),
+        .setName("autoplay")
+        .setDescription("Sets autoplay to the current player queue")
+        .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
         try {

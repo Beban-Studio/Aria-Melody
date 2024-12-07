@@ -21,8 +21,8 @@
     "node-capitalize": "^1.0.0",
     "node-fetch": "^2.7.0",
     "os": "^0.1.2",
-    "riffy": "https://pkg.pr.new/riffy-team/riffy@84a70ab",
+    "riffy": "https://pkg.pr.new/riffy-team/riffy@866c6d9",
     "riffy-spotify": "^1.0.2",
-    "youtube-sr": "^4.3.11"
+    "spotify-web-api-node": "^5.0.2"
   }
 }

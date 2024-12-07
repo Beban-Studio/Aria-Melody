@@ -4,9 +4,9 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("resume")
-   	.setDescription("Resume a paused track")
-    .setDMPermission(false),
+        .setName("resume")
+        .setDescription("Resume a paused track")
+        .setDMPermission(false),
 
     run: async ({ interaction, client }) => {    
         const embed = new EmbedBuilder().setColor(config.default_color);

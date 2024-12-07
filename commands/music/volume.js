@@ -4,14 +4,14 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("volume")
-   	.setDescription("Set the player\'s volume")
-    .setDMPermission(false)
-    .addIntegerOption(option =>
-        option.setName("value")
-        .setDescription("The player\'s volume ( 1 - 150 )")
-        .setRequired(true)
-    ),
+        .setName("volume")
+        .setDescription("Set the player\'s volume")
+        .setDMPermission(false)
+        .addIntegerOption(option =>
+            option.setName("value")
+            .setDescription("The player\'s volume ( 1 - 150 )")
+            .setRequired(true)
+        ),
 
     run: async ({ interaction, client }) => {
         const embed = new EmbedBuilder().setColor(config.default_color);

@@ -1,6 +1,6 @@
-const { logger } = require("../../../utils/logger");
-const { ActivityType } = require("discord.js");
 const { capitalize, format } = require("../../../utils/string");
+const { ActivityType } = require("discord.js");
+const { logger } = require("../../../utils/logger");
 const config = require("../../../config");
 const colors = require("colors");
 

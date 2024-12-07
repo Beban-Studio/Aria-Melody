@@ -4,9 +4,9 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("skip")
-   	.setDescription("Skip the current playing track")
-    .setDMPermission(false),
+        .setName("skip")
+        .setDescription("Skip the current playing track")
+        .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
         const embed = new EmbedBuilder().setColor(config.default_color);

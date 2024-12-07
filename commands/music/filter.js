@@ -4,30 +4,30 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-   	.setName("filter")
-   	.setDescription("Apply an audio filter to the current player")
-    .setDMPermission(false)
-    .addStringOption(option =>
-        option.setName("option")
-        .setDescription("The filter you want to apply")
-        .setRequired(true)
-        .addChoices(
-            { name: 'Clear/Disable', value: 'clear' },
-            { name: 'Karaoke', value: 'karaoke' },
-            { name: 'Timescale', value: 'timescale' },
-            { name: 'Tremolo', value: 'tremolo' },
-            { name: 'Vibrato', value: 'vibrato' },
-            { name: 'Rotation', value: 'rotation' },
-            { name: 'Distortion', value: 'distortion' },
-            { name: 'ChannelMix', value: 'channelMix' },
-            { name: 'LowPass', value: 'lowPass' },
-            { name: 'Bassboost', value: 'bassboost' },
-            { name: 'Slowmode', value: 'slowmode' },
-            { name: 'Nightcore', value: 'nightcore' },
-            { name: 'Vaporwave', value: 'vaporwave' },
-            { name: '8D', value: '8d' },
-        )
-    ),
+        .setName("filter")
+        .setDescription("Apply an audio filter to the current player")
+        .setDMPermission(false)
+        .addStringOption(option =>
+            option.setName("option")
+            .setDescription("The filter you want to apply")
+            .setRequired(true)
+            .addChoices(
+                { name: 'Clear/Disable', value: 'clear' },
+                { name: 'Karaoke', value: 'karaoke' },
+                { name: 'Timescale', value: 'timescale' },
+                { name: 'Tremolo', value: 'tremolo' },
+                { name: 'Vibrato', value: 'vibrato' },
+                { name: 'Rotation', value: 'rotation' },
+                { name: 'Distortion', value: 'distortion' },
+                { name: 'ChannelMix', value: 'channelMix' },
+                { name: 'LowPass', value: 'lowPass' },
+                { name: 'Bassboost', value: 'bassboost' },
+                { name: 'Slowmode', value: 'slowmode' },
+                { name: 'Nightcore', value: 'nightcore' },
+                { name: 'Vaporwave', value: 'vaporwave' },
+                { name: '8D', value: '8d' },
+            )
+        ),
 
     run: async ({ interaction, client }) => {
         const embed = new EmbedBuilder().setColor(config.default_color);
