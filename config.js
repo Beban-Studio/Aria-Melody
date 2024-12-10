@@ -27,11 +27,11 @@ module.exports = {
     /**
      * Developer | The bot developer's id to use dev only command
      */
-    developer_id: [process.env.DEV_ID] || [''],
+    developer_id: process.env.DEV_ID || "",
     /**
      * Developer guild | The bot development's guild id to use dev only command
      */
-    developer_guild: [process.env.DEV_GUILD] || [''],
+    developer_guild: process.env.DEV_GUILD || "",
     /**
      * Default search platform | The default search platform of the music feature ( This can be spsearch, ytsearch, ytmsearch, scsearch )
      */

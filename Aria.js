@@ -27,8 +27,8 @@ new CommandKit({
     commandsPath: path.join(__dirname, "commands"),
     eventsPath: path.join(__dirname, "./events/botEvents"),
     validationsPath: path.join(__dirname, "validations"),
-    devGuildIds: config.developer_guild,
-    devUserIds: config.developer_id,
+    devGuildIds: [config.developer_guild],
+    devUserIds: [config.developer_id],
     bulkRegister: false,
 });
 
