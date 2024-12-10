@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
 const { logger } = require("../../utils/logger.js");
 const Reconnect = require("../../schemas/247Connection");
 const config = require("../../config");
@@ -7,6 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
    		.setName("247")
    		.setDescription("Set the current player session to 24/7")
+		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
    		.setDMPermission(false),
 
 	run: async ({ client, interaction }) => {
