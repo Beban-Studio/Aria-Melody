@@ -83,17 +83,19 @@ On command/commands/music/play.js line 47-65
 ### Hosted by @[herjuna](https://discord.gg/9eCgpGuZAa) | [Uptime](deployments.beban.tech)
 **Version 4.0.8** <br />
 ```bash
-Host : node-us.beban.tech
+Host : lava-v4.beban.tech
 Port : 80
-Password : "dsc.gg/bebancommunity"
+Pass : bytebee_
+Region : US, Utah
 Secure : false
 ```
 
 **Version 3.7.13** <br />
 ```bash
-Host : node-us-v3.beban.tech
+Host : lava-v3.beban.tech
 Port : 80
-Password : "iknowwhy"
+Pass : iknowwhy
+Region : US, Utah
 Secure : false
 ```
 
