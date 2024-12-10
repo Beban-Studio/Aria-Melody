@@ -10,7 +10,13 @@ module.exports = {
 
 	run: async ({ client, interaction }) => {
 		const embed = new EmbedBuilder().setColor(config.default_color);
+		const player = client.riffy.players.get(interaction.guildId);
 
+		if (player) return interaction.reply({ 
+			content: "\`❌\` | You must be in the same voice channel as the bot.", 
+			ephemeral: true 
+		});
+		
 		try {
             await interaction.deferReply({ ephemeral: true });
 
