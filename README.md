@@ -80,21 +80,12 @@ On command/commands/music/play.js line 47-65
 </details>
 
 ## Available Lavalink
-### Hosted by @[herjuna](https://discord.gg/9eCgpGuZAa) | [Uptime](deployments.beban.tech)
+### Hosted by @[herjuna](https://discord.gg/9eCgpGuZAa)
 **Version 4.0.8** <br />
 ```bash
-Host : lava-v4.beban.tech
+Host : lavalink.beban.tech
 Port : 80
 Pass : bytebee_
-Region : US, Utah
-Secure : false
-```
-
-**Version 3.7.13** <br />
-```bash
-Host : lava-v3.beban.tech
-Port : 80
-Pass : iknowwhy
 Region : US, Utah
 Secure : false
 ```
