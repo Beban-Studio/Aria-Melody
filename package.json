@@ -18,10 +18,9 @@
     "moment": "^2.30.1",
     "moment-duration-format": "^2.3.2",
     "mongoose": "^8.6.3",
-    "node-capitalize": "^1.0.0",
     "node-fetch": "^2.7.0",
     "os": "^0.1.2",
-    "riffy": "https://pkg.pr.new/riffy-team/riffy@866c6d9",
+    "riffy": "https://pkg.pr.new/riffy-team/riffy@15b650b",
     "riffy-spotify": "^1.0.2",
     "spotify-web-api-node": "^5.0.2"
   }
