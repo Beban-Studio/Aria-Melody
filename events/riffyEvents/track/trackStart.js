@@ -5,7 +5,6 @@ const {
 	EmbedBuilder } = require("discord.js");
 const { default_color } = require("../../../config");
 const formatDuration = require("../../../utils/formatDuration");
-const capital = require("node-capitalize");
 const client = require("../../../Aria");
 
 client.riffy.on('trackStart', async (player, track) => {
@@ -51,7 +50,7 @@ client.riffy.on('trackStart', async (player, track) => {
 			{ name: "Duration", value: `\`${trackDuration}\``, inline: true },
 			{ name: "Requester", value: `${track.info.requester}`, inline: true },	
 		)
-        .setFooter({ text: `Loop: ${capital(player.loop)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%` });
+        .setFooter({ text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%` });
     
     const msg = await channel
     	.send({ embeds: [startembed], components: [startrow1, startrow2] })
@@ -98,7 +97,7 @@ client.riffy.on('trackStart', async (player, track) => {
                         { name: "Requester", value: `${track.info.requester}`, inline: true },
                     )
                     .setFooter({
-                        text: `Loop: ${capital(player.loop)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
+                        text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
                     });
 
                 bLoop = new ButtonBuilder().setCustomId("loop").setEmoji("1276835185849143367").setStyle(ButtonStyle.Success);
@@ -136,7 +135,7 @@ client.riffy.on('trackStart', async (player, track) => {
                         { name: "Requester", value: `${track.info.requester}`, inline: true },
                     )
                     .setFooter({
-                        text: `Loop: ${capital(player.loop)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
+                        text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
                     });
                 
                 bLoop = new ButtonBuilder().setCustomId("loop").setEmoji("1276835185849143367").setStyle(ButtonStyle.Primary);
@@ -169,7 +168,7 @@ client.riffy.on('trackStart', async (player, track) => {
                     { name: "Requester", value: `${track.info.requester}`, inline: true },
                 )
                 .setFooter({
-                    text: `Loop: ${capital(player.loop)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
+                    text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
                 });
 
                 bLoop = new ButtonBuilder().setCustomId("loop").setEmoji("1276835185849143367").setStyle(ButtonStyle.Secondary);
@@ -296,7 +295,7 @@ client.riffy.on('trackStart', async (player, track) => {
                 { name: "Requester", value: `${track.info.requester}`, inline: true },
             )
             .setFooter({
-                text: `Loop: ${capital(player.loop)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
+                text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
             });
 
             await message.reply({ 
@@ -343,7 +342,7 @@ client.riffy.on('trackStart', async (player, track) => {
                     { name: "Requester", value: `${track.info.requester}`, inline: true },
                 )
                 .setFooter({
-                    text: `Loop: ${capital(player.loop)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
+                    text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%`,
                 });
 
             await message.reply({ 
