@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { logger } = require("../../utils/logger");
+const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,6 +9,8 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
+        const embed = new EmbedBuilder().setColor(config.default_color);
+
         try {
             const player = client.riffy.players.get(interaction.guildId);
 
@@ -18,17 +21,18 @@ module.exports = {
                 });
             }
 
-            if (player.isAutoplay === false) {
+            if (player.isAutoplay === false) {        
+                await interaction.reply({ 
+                    embeds: [embed.setDescription("♾ | Autoplay has been enabled")], 
+                    ephemeral: true 
+                });
 
-                const embed = new EmbedBuilder().setDescription(`♾ | Autoplay has been enabled`).setColor("Blurple");
-        
-                await interaction.reply({ embeds: [embed], ephemeral: true });
                 player.isAutoplay = true;
-            } else if (player.isAutoplay === true) {
-
-                const embed = new EmbedBuilder().setDescription(`♾ | Autoplay has been disabled`).setColor("Blurple");
-        
-                await interaction.reply({ embeds: [embed], ephemeral: true });
+            } else if (player.isAutoplay === true) {        
+                await interaction.reply({ 
+                    embeds: [embed.setDescription("♾ | Autoplay has been disabled")], 
+                    ephemeral: true 
+                });
                 player.isAutoplay = false;
             }
 

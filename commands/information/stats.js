@@ -9,7 +9,7 @@ const os = require("os");
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("stats")
-        .setDescription("Check the bot\'s stats information")
+        .setDescription("Check the bot's stats information")
         .setDMPermission(true),
 
     run: async ({ interaction, client }) => {
