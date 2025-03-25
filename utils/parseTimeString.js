@@ -13,3 +13,5 @@ function parseTimeString(timeString) {
     }
     return 0;
 }
+
+module.exports = { parseTimeString };
