@@ -71,6 +71,10 @@ module.exports = {
 		const focusedValue = interaction.options.getFocused();
 		if (focusedValue.length <= 2) return;
 
+		if (/^(http|https):\/\//.test(focusedValue.toLocaleLowerCase())) {
+			return interaction.respond([{ name: "URL", value: focusedValue }]);
+		}
+
 		let spotifyChoices = [];
 		try {
 			const spotifyResults = await client.spotify.searchTracks(focusedValue, { limit: 15 });
