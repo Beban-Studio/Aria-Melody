@@ -1,4 +1,4 @@
-const parseTimeString = require("../../../utils/parseTimeString");
+const { parseTimeString } = require("../../../utils/parseTimeString");
 const client = require("../../../Aria");
 
 client.riffy.on("queueEnd", async (player) => {

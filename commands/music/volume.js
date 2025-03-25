@@ -5,11 +5,11 @@ const config = require("../../config");
 module.exports = {
 	data: new SlashCommandBuilder()
         .setName("volume")
-        .setDescription("Set the player\'s volume")
+        .setDescription("Set the player's volume")
         .setDMPermission(false)
         .addIntegerOption(option =>
             option.setName("value")
-            .setDescription("The player\'s volume ( 1 - 150 )")
+            .setDescription("The player's volume ( 1 - 150 )")
             .setRequired(true)
         ),
 

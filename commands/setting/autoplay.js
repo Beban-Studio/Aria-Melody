@@ -38,7 +38,10 @@ module.exports = {
 
         } catch (err) {
             logger(err, "error");
-            return interaction.reply({ content: `\`❌\` | An error occurred: ${err.message}`,  ephemeral: true });
+            return interaction.reply({ 
+                content: `\`❌\` | An error occurred: ${err.message}`,  
+                ephemeral: true 
+            });
         }
     },
 	options: {

@@ -68,7 +68,11 @@ module.exports = {
                         .setDisabled(currentPage === lyricsChunks.length - 1)
                 );
 
-            const reply = await interaction.reply({ embeds: [updateEmbed()], components: [row], fetchReply: true });
+            const reply = await interaction.reply({ 
+                embeds: [updateEmbed()], 
+                components: [row], 
+                fetchReply: true 
+            });
 
             const filter = (buttonInteraction) => {
                 return buttonInteraction.user.id === interaction.user.id;
