@@ -2,9 +2,11 @@ const {
 	ActionRowBuilder, 
 	ButtonBuilder, 
 	ButtonStyle, 
-	EmbedBuilder } = require("discord.js");
+	EmbedBuilder 
+} = require("discord.js");
 const { default_color } = require("../../../config");
 const formatDuration = require("../../../utils/formatDuration");
+const guild = require("../../../schemas/guild");
 const client = require("../../../Aria");
 
 client.riffy.on('trackStart', async (player, track) => {
@@ -51,6 +53,16 @@ client.riffy.on('trackStart', async (player, track) => {
 			{ name: "Requester", value: `${track.info.requester}`, inline: true },	
 		)
         .setFooter({ text: `Loop: ${(player.loop).charAt(0).toUpperCase() + (player.loop).slice(1)} • Queue: ${player.queue.length} song(s) • Volume: ${player.volume}%` });
+
+    let buttonState = await guild.findOne({ guildId: player.guildId });
+
+    if (!buttonState) {
+        buttonState = new guild({ guildId: player.guildId, buttons: true });
+    } else if (!buttonState.buttons) {
+        return channel
+    	.send({ embeds: [startembed] })
+    	.then((x) => (player.message = x));
+    }
     
     const msg = await channel
     	.send({ embeds: [startembed], components: [startrow1, startrow2] })
