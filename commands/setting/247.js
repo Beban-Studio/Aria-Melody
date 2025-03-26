@@ -1,54 +1,61 @@
 const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder } = require("discord.js");
 const { logger } = require("../../utils/logger.js");
-const Reconnect = require("../../schemas/247Connection");
+const guild = require("../../schemas/guild");
 const config = require("../../config");
 
 module.exports = {
-	data: new SlashCommandBuilder()
-   		.setName("247")
-   		.setDescription("Set the current player session to 24/7")
-		.setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
-   		.setDMPermission(false),
+    data: new SlashCommandBuilder()
+        .setName("247")
+        .setDescription("Toggle the current player session to 24/7")
+        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)
+        .setDMPermission(false),
 
-	run: async ({ client, interaction }) => {
-		const embed = new EmbedBuilder().setColor(config.default_color);
+    run: async ({ client, interaction }) => {
+        const embed = new EmbedBuilder().setColor(config.default_color);
+        const player = client.riffy.players.get(interaction.guildId);
 
-		try {
-			const player = client.riffy.players.get(interaction.guildId);
+        if (!player) {
+            return interaction.reply({ 
+                embeds: [embed.setDescription("\`❌\` | No player found in this server.")],  
+                ephemeral: true 
+            });
+        }
 
-			if (!player) {
-                return interaction.reply({ 
-                    embeds: [embed.setDescription("\`❌\` | No player found in this server.")],  
-                    ephemeral: true 
+        await interaction.deferReply({ ephemeral: false });
+
+        try {
+            const data = await guild.findOne({ guildId: interaction.guildId });
+
+            if (data) {
+                data.reconnect.status = !data.reconnect.status;
+                await data.save();
+            } else {
+                const newData = new guild({
+                    guildId: interaction.guildId,
+                    reconnect: {
+                        status: true,
+                        textChannel: player.textChannel ||interaction.channelId,
+                        voiceChannel: player.voiceChannel || interaction.member.voice.channelId,
+                    },
+                    buttons: true
                 });
+                await newData.save();
             }
 
-			await interaction.deferReply({ ephemeral: false });
-			const data = await Reconnect.findOne({ GuildId: interaction.guildId });
-
-			if (data) {
-				await data.deleteOne();
-				return interaction.editReply({ embeds: [embed.setDescription("\`📻\` | 247 Mode has been: \`Disabled\`")] });
-			} else if (!data) {
-				const newData = await Reconnect.create({
-					GuildId: interaction.guildId,
-					TextChannelId: player.textChannel,
-					VoiceChannelId: player.voiceChannel,
-				});
-
-				await newData.save();
-				return interaction.editReply({ embeds: [embed.setDescription("\`📻\` | 247 Mode has been: \`Enabled\`")] });
-			}
-		} catch (err) {
-			logger(err, "error");
-			return interaction.editReply({ 
-				embeds: [embed.setDescription(`\`❌\` | An error occurred: ${err.message}`)], 
-				ephemeral: true 
-			});
-		}
-	},
-	options: {
-		inVoice: true,
-		sameVoice: true,
-	}
+            const statusMessage = data ? (data.reconnect.status ? "Enabled" : "Disabled") : "Enabled";
+            return interaction.editReply({ 
+                embeds: [embed.setDescription(`\`📻\` | 24/7 Mode has been: \`${statusMessage}\``)] 
+            });
+        } catch (err) {
+            logger(err, "error");
+            return interaction.editReply({ 
+                embeds: [embed.setDescription(`\`❌\` | An error occurred: ${err.message}`)], 
+                ephemeral: true 
+            });
+        }
+    },
+    options: {
+        inVoice: true,
+        sameVoice: true,
+    }
 };

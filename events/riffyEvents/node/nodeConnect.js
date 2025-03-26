@@ -1,5 +1,5 @@
 const { logger } = require("../../../utils/logger");
-const Reconnect = require("../../../schemas/247Connection");
+const guildData = require("../../../schemas/guild");
 const client = require("../../../Aria");
 
 client.riffy.on("nodeConnect", async (node) => {
@@ -7,16 +7,16 @@ client.riffy.on("nodeConnect", async (node) => {
     logger(`Successfully connect to ${node.name}`, "debug");
 
     for (const guild of guilds.values()) {
-        const data = await Reconnect.findOne({ GuildId: guild.id });
-        
-        if (data) {
-            const voiceChannel = guild.channels.cache.get(data.VoiceChannelId);
+        const data = await guildData.findOne({ guildId: guild.id });
+
+        if (data && data.reconnect.status) {
+            const voiceChannel = guild.channels.cache.get(data.reconnect.voiceChannel);
         
             try {
                 await client.riffy.createConnection({
-                    guildId: data.GuildId, 
-                    voiceChannel: data.VoiceChannelId, 
-                    textChannel: data.TextChannelId,
+                    guildId: data.guildId, 
+                    voiceChannel: data.reconnect.voiceChannel, 
+                    textChannel: data.reconnect.textChannel,
                     deaf: true
                 });
             
