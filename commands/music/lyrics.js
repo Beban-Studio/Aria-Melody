@@ -18,7 +18,7 @@ module.exports = {
         const embed = new EmbedBuilder().setColor(config.default_color);
 
         try {
-            const node = client.riffy.nodeMap.get("Lavalink");
+            const node = Array.from(client.riffy.nodeMap.values())[0];
             const lyricsData = await node.lyrics.getCurrentTrack(interaction.guildId, false, "lyrics");
 
             if (!lyricsData || !lyricsData.text) {

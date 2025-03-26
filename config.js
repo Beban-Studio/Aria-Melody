@@ -43,7 +43,7 @@ module.exports = {
      */
     nodes: [
         {
-            name: "Lavalink", // Don't change the name of the node if you don't know what you're doing
+            name: "Lavalink", // Just change it as you want
             host: "lavalink.beban.tech", // The hostname of the lavalink server
             port: 80,  // The port of the lavalink server
             password: "bytebee_", // The password of lavalink server
