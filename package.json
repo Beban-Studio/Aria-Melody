@@ -1,7 +1,7 @@
 {
   "name": "aria-melody",
   "description": "Aria Melody is a simple music bot which is made using Riffy package.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "Aria.js",
   "scripts": {
     "start": "node Aria.js",

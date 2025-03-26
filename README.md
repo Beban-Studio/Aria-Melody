@@ -21,7 +21,7 @@
 #
 
 ## Top Features
--   🎻 Using **[Riffy](https://www.npmjs.com/package/riffy) `@866c6d9`** Lavalink Client
+-   🎻 Using **[Riffy](https://www.npmjs.com/package/riffy) `@15b650b`** Lavalink Client
 -   🌊 Support Lavalink v3 & v4 Connection
 -   🍸️ Slash Command
 -   🎵 Music System
