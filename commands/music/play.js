@@ -2,6 +2,22 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require("disc
 const { logger } = require("../../utils/logger");
 const config = require("../../config");
 
+function checkUrl(link) {
+    const urlPatterns = {
+        youtube: /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/gi,
+        spotify: /^(?:https:\/\/open\.spotify\.com\/(?:user\/[A-Za-z0-9]+\/)?|spotify:)(album|playlist|track|artist)(?:[/:])([A-Za-z0-9]+).*$/gi,
+        appleMusic: /(?:https:\/\/music\.apple\.com\/)(?:.+)?(artist|album|music-video|playlist)\/([\w\-\.]+(\/)+[\w\-\.]+|[^&]+)\/([\w\-\.]+(\/)+[\w\-\.]+|[^&]+)/gi,
+        deezer: /^(?:https?:\/\/|)?(?:www\.)?deezer\.com\/(?:\w{2}\/)?(track|album|playlist|artist)\/(\d+)/gi,
+        soundCloud: /^https?:\/\/(soundcloud\.com|snd\.sc)\/(.*)$/
+    };
+
+    for (const [key, pattern] of Object.entries(urlPatterns)) {
+        if (pattern.test(link)) {
+            return { type: key, url: link };
+        }
+    }
+    return null;
+}
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -69,25 +85,25 @@ module.exports = {
 
 	autocomplete: async ({ interaction, client }) => {
 		const focusedValue = interaction.options.getFocused();
-		if (focusedValue.length <= 2) return;
+		if (focusedValue.length <= 1) return;
 
-		if (/^(http|https):\/\//.test(focusedValue.toLocaleLowerCase())) {
-			return interaction.respond([{ name: "URL", value: focusedValue }]);
+		const urlCheck = checkUrl(focusedValue);
+		if (urlCheck) {
+			return interaction.respond([{ name: `${urlCheck.type.charAt(0).toUpperCase() + urlCheck.type.slice(1)} URL`, value: urlCheck.url }]);
 		}
 
 		let spotifyChoices = [];
 		try {
-			const spotifyResults = await client.spotify.searchTracks(focusedValue, { limit: 15 });
+			const spotifyResults = await client.spotify.searchTracks(focusedValue, { limit: 10 });
 			spotifyChoices = spotifyResults.body.tracks.items.map(track => ({
 				name: `${track.name} - ${track.artists.map(artist => artist.name).join(', ')}`,
 				value: track.external_urls.spotify
 			}));
-			
 		} catch (err) {
 			logger(`Error fetching Spotify results: ${err}`);
 		}
 
-		return interaction.respond(spotifyChoices.slice(0, 15)).catch(() => {});
+		return interaction.respond(spotifyChoices.slice(0, 10)).catch(() => {});
 
 		/** 
 		 * I've switched the autocomplete result from youtube-sr to spotify-web-api-node
