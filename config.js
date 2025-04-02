@@ -13,7 +13,7 @@ module.exports = {
      */
     client_token: process.env.CLIENT_TOKEN || "", 
     /**
-     * Client ID | Used to check bot information and such
+     * Client id | Used to check bot information and such
      */
     client_id: process.env.CLIENT_ID || "",
     /**
@@ -25,7 +25,7 @@ module.exports = {
      */
     mongodb_url: process.env.MONGO_URI || "",
     /**
-     * Developer | The bot developer's id to use dev only command
+     * Developer id | The bot developer's id to use dev only command
      */
     developer_id: process.env.DEV_ID || "",
     /**

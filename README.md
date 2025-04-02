@@ -12,7 +12,8 @@
 </p>
 
 <div align="center">
-  <a href="https://www.npmjs.com/package/riffy"><img src="https://img.shields.io/badge/Riffy-@866c6d9-blue" />
+  <a href="https://www.npmjs.com/package/commandkit"><img src="https://img.shields.io/badge/CommandKit-@0.1.10-purple"/>
+  <a href="https://www.npmjs.com/package/riffy"><img src="https://img.shields.io/badge/Riffy-@15b650b-blue"/>
 </div>
 <p align="center"> 
   <a href="https://discord.gg/9eCgpGuZAa" target="_blank"> <img src="https://discordapp.com/api/guilds/1215235509958479894/widget.png?style=banner2"/> </a>
@@ -20,25 +21,86 @@
 
 #
 
-## Top Features
+### `📢` Top Features
 -   🎻 Using **[Riffy](https://www.npmjs.com/package/riffy) `@15b650b`** Lavalink Client
 -   🌊 Support Lavalink v3 & v4 Connection
 -   🍸️ Slash Command
 -   🎵 Music System
+-   📦 Playlist System
 -   🎙️ Lots of Sound Filters
 -   💺 24/7 in Voice Channel
--   🔎 AutoPlay **[ Support Youtube, Spotify, Soundcloud ]**
+-   🔎 AutoPlay [**Support Youtube, Spotify, Soundcloud**]
 -   🫧 Clean UI
 -   🏆️ Easy to Use
 -   And Many More...!
 
-> [!IMPORTANT]
-> If you want to use lavalink v3 configuration, please read more on the riffy docs about it [Riffy Docs](https://riffy.js.org/basics/usage)
+### `🎵` Available Lavalink
+**Version 4.0.8 | Hosted by [BebanCode](https://github.com/BebanCode)**
+```yml
+Host : lavalink.beban.tech
+Port : 80
+Pass : bytebee_
+Region : US, Utah, Salt Lake City
+Secure : false
+Plugins :
+  - sponsorblock-plugin
+  - youtube-plugin
+  - duncteBot-plugin
+  - java-lyrics-plugin
+  - lavalyrics-plugin
+  - lavasrc-plugin
+```
+
+### `📍` Requirements
+-   Node.js `v16` or higher
+-   MongoDB `v5` or higher
+-   Spotify API credentials
+-   Lavalink server [**[Check above](https://github.com/Beban-Studio/Aria-Melody#available-lavalink)**]
+
+### `⚙` Configuration & Installation
+-   Clone this repository.
+```
+https://github.com/Beban-Studio/Aria-Melody.git
+```
+-   Open the main folder then install all the package.
+```
+npm install
+```
+-   Rename `.env.example` to `.env` and fill out these variables according to yours.
+```
+##########################################################
+# RENAME THIS FILE TO .env AFTER FILLING THE INFORMATION
+##########################################################
+
+# Discord Bot Configuration
+CLIENT_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
+CLIENT_ID=YOUR_DISCORD_CLIENT_ID_HERE
+DEFAULT_COLOR=YOUR_HEX_COLOR  # Default embed color, you can change it to any hex color code ( remove the hashsign a.k.a # )
+
+# MongoDB Configuration
+MONGO_URI=mongodb://username:password@host:port/database_name
+
+# Developer Information
+DEV_ID=YOUR_GUILD_ID  # Replace with your Discord ID (separated by comma "," if more than one)
+DEV_GUILD=YOUR_USER_ID  # Replace with your Developer Guild ID (separated by comma "," if more than one)
+
+# Default Search Platform
+DEFAULT_SEARCH_PLATFORM=spsearch  # Default track searching engine e.g: spsearch, soundcloud, ytsearch, etc.
+
+# Spotify Configuration
+SPOTIFY_CLIENTID=YOUR_SPOTIFY_CLIENT_ID_HERE
+SPOTIFY_SECRET=YOUR_SPOTIFY_CLIENT_SECRET_HERE
+```
+-   Starts the bot by running
+```
+npm run deploy
+```
+You only need to run this command once to deploy and flush all the command from the bot the bot, you can start it  after that by running `npm start` or `node Aria.js`
 
 <details>
 <summary>Aria Melody Lavalink v3 Configuration</summary>
 
-On Aria.js `line 53` change the rest version to `v3`
+On Aria.js change the rest version to `v3`
 ```diff
 client.riffy = new Riffy(client, config.nodes, {
     send: (payload) => {
@@ -53,7 +115,7 @@ client.riffy = new Riffy(client, config.nodes, {
 });
 ```
 
-On command/commands/music/play.js line 47-65
+On ../commands/music/play.js
 ```diff
 - if (loadType === "playlist") {
 + if (loadType === 'PLAYLIST_LOADED') {
@@ -79,32 +141,7 @@ On command/commands/music/play.js line 47-65
 ```
 </details>
 
-## Available Lavalink
-### Hosted by @[herjuna](https://discord.gg/9eCgpGuZAa)
-**Version 4.0.8** <br />
-```bash
-Host : lavalink.beban.tech
-Port : 80
-Pass : bytebee_
-Region : US, Utah
-Secure : false
-```
 
-## Requirements
--   Basic understanding in **discord.js**
--   Node.js v16.x or higher ( I recommend LTS version v20.x )
--   A working lavalink server checkout the available lavalink servers above
--   Spotify API credentials (for searching tracks)
--   Stable Connection ( If you want to use this for production )
-
-> [!TIP]
-> You can run the bot without flushing the command every start by using `node Aria.js`or `npm start`
-
-## Installlation
--   Clone this repository
--   Install the required packages by running `npm install` or `yarn install`
--   Find a file named `config.js` and add your bot token and other required information
--   Starts the bot using `npm run deploy`
 
 ## Contributors
 We really appreciated if any of you can contribute to this project. To contribute to this project you can fork this repository and make a pull request, we will gladly check it out. If you have any suggestion or want to report any bug you can join this server: [Beban Community](https://discord.gg/9eCgpGuZAa)

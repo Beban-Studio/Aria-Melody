@@ -57,12 +57,12 @@ module.exports = {
             const row = new ActionRowBuilder()
                 .addComponents(
                     new ButtonBuilder()
-                        .setCustomId('prev')
+                        .setCustomId('prev_page')
                         .setLabel('Previous')
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(currentPage === 0),
                     new ButtonBuilder()
-                        .setCustomId('next')
+                        .setCustomId('next_page')
                         .setLabel('Next')
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(currentPage === lyricsChunks.length - 1)
