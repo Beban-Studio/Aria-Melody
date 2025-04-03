@@ -136,9 +136,5 @@ module.exports = {
 		});
 		interaction.respond(result.slice(0, 15)).catch(() => {});
 		*/
-	},
-	options: {
-		inVoice: true,
-		sameVoice: true,
 	}
 };
