@@ -35,7 +35,7 @@ module.exports = {
             }
 
             player.setVolume(volume);
-            return interaction.reply({ embed: [embed.setDescription(`\`🔊\` | Volume set to ${volume}%`)] });
+            return interaction.reply({ embeds: [embed.setDescription(`\`🔊\` | Volume set to ${volume}%`)] });
 
         } catch (err) {
             logger(err, "error");
