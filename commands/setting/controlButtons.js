@@ -37,8 +37,4 @@ module.exports = {
             });
         }
     },
-    options: {
-        inVoice: true,
-        sameVoice: true,
-    }
 };
