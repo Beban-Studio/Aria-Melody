@@ -5,6 +5,7 @@ const {
     EmbedBuilder, 
     ButtonStyle 
 } = require("discord.js");
+const { parseTimeString } = require("../../utils/parseTimeString");
 const { logger } = require("../../utils/logger");
 const config = require("../../config");
 
@@ -15,7 +16,7 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
         try {
             const node = Array.from(client.riffy.nodeMap.values())[0];
@@ -78,7 +79,7 @@ module.exports = {
                 return buttonInteraction.user.id === interaction.user.id;
             };
 
-            const collector = reply.createMessageComponentCollector({ filter, time: 60000 });
+            const collector = reply.createMessageComponentCollector({ filter, time: parseTimeString("60s") });
 
             collector.on('collect', async (buttonInteraction) => {
                 if (buttonInteraction.customId === 'next') {

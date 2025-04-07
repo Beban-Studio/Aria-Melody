@@ -11,7 +11,7 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ interaction }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         const guildId = interaction.guild.id;
 
         try {

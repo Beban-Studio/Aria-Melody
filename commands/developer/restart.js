@@ -9,7 +9,7 @@ module.exports = {
    	    .setDescription("Restart the bot process."),
 
     run: async ({ interaction }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         
         try {
         await interaction.reply({ 

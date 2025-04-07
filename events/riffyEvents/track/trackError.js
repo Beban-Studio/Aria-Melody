@@ -1,6 +1,7 @@
 const { logger } = require("../../../utils/logger");
-const client = require("../../../Aria");
 
-client.riffy.on("trackError", async (payload) => {
-    logger(payload, "error");
-});
+module.exports = async (client) => {
+    client.riffy.on("trackError", async (payload) => {
+        logger(payload, "error");
+    });
+};

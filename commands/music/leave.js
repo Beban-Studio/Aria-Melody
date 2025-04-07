@@ -4,8 +4,8 @@ const config = require("../../config");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-        .setName("skip")
-        .setDescription("Skip the current playing track")
+        .setName("leave")
+        .setDescription("Make the bot leave the current voice channel they're in")
         .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
@@ -21,15 +21,9 @@ module.exports = {
                 });
             }
 
-            if (player.queue.size === 0) {
-                return interaction.reply({ 
-                    embeds: [embed.setDescription("\`❌\` | The queue is empty.")], 
-                    ephemeral: true 
-                });
-            }
-
-            await interaction.reply({ embeds: [embed.setDescription(`\`⏭️\` | Skipped : ${player.current.info.title}`)] });
             player.stop();
+            player.destroy();
+            return interaction.reply({ embeds: [embed.setDescription("\`⏹️\` Bot has left the channel.")] });
 
         } catch (err) {
             logger(err, "error");

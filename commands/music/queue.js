@@ -1,10 +1,11 @@
 const { 
     SlashCommandBuilder, 
     ActionRowBuilder, 
-    ButtonBuilder,
+    ButtonBuilder, 
     EmbedBuilder, 
     ButtonStyle 
 } = require("discord.js");
+const { parseTimeString } = require("../../utils/parseTimeString");
 const { logger } = require("../../utils/logger");
 const config = require("../../config");
 
@@ -15,84 +16,92 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ interaction, client }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
         try {
+            await interaction.deferReply();
+            await interaction.editReply({ embeds: [embed.setDescription("`🔎` | Loading queue...")] });
+
             const player = client.riffy.players.get(interaction.guildId);
 
             if (!player || !player.queue || !player.queue.length) {
-                return interaction.reply({ 
+                return interaction.editReply({ 
                     embeds: [embed.setDescription("`❌` | No songs are currently playing.")],  
                     ephemeral: true 
                 });
             }
 
-            const pageSize = 10;
-            const totalPages = Math.ceil(player.queue.length / pageSize);
+            const songsPerPage = 10;
+            const totalPages = Math.ceil(player.queue.length / songsPerPage);
             let currentPage = 0;
 
-            const generateQueueDescription = (page) => {
-                return player.queue.slice(page * pageSize, (page + 1) * pageSize)
-                    .map((track, index) => {
-                        const requester = track.info.requester || 'Unknown';
-                        return `\`${(page * pageSize) + index + 1}.\` [${track.info.title || 'Unknown'}](${track.info.uri}) • ${requester}`;
-                    }).join('\n');
+            const generateSongList = (page) => {
+                const start = page * songsPerPage;
+                const end = Math.min(start + songsPerPage, player.queue.length);
+                return player.queue.slice(start, end).map((track, index) => 
+                    `**\`\`\`autohotkey\n${start + index + 1}. ${track.info.title} • ${track.info.author}\n` +
+                    `\`\`\`**`
+                ).join("\n");
             };
 
-            if (totalPages === 1) {
-                embed.setDescription(generateQueueDescription(currentPage))
-                     .setFooter({ text: `Page ${currentPage + 1} of ${totalPages}` });
-                return interaction.reply({ embeds: [embed] });
+            const updateEmbed = () => {
+                embed.setDescription(generateSongList(currentPage))
+                     .setFooter({ text: `Page ${currentPage + 1} of ${totalPages}` })
+                     .setAuthor({ name: "Current Queue" });
+            };
+
+            let row;
+            if (totalPages > 1) {
+                row = new ActionRowBuilder()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('prev_page')
+                            .setLabel('Previous')
+                            .setStyle(ButtonStyle.Primary)
+                            .setDisabled(currentPage === 0),
+                        new ButtonBuilder()
+                            .setCustomId('next_page')
+                            .setLabel('Next')
+                            .setStyle(ButtonStyle.Primary)
+                            .setDisabled(currentPage === totalPages - 1)
+                    );
             }
 
-            const row = new ActionRowBuilder()
-                .addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('prev_page')
-                        .setLabel('Previous')
-                        .setStyle(ButtonStyle.Primary)
-                        .setDisabled(currentPage === 0),
-                    new ButtonBuilder()
-                        .setCustomId('next_page')
-                        .setLabel('Next')
-                        .setStyle(ButtonStyle.Primary)
-                        .setDisabled(currentPage === totalPages - 1)
-                );
-
-            const reply = await interaction.reply({ 
-                embeds: [embed.setDescription(generateQueueDescription(currentPage)).setFooter({ text: `Page ${currentPage + 1} of ${totalPages}` })], 
-                components: [row], 
+            updateEmbed();
+            const reply = await interaction.editReply({ 
+                embeds: [embed], 
+                components: row ? [row] : [],
                 fetchReply: true 
             });
 
-            const filter = (buttonInteraction) => {
-                return buttonInteraction.user.id === interaction.user.id;
-            };
+            const filter = (buttonInteraction) => buttonInteraction.user.id === interaction.user.id;
 
-            const collector = reply.createMessageComponentCollector({ filter, time: 60000 });
+            if (row) {
+                const collector = reply.createMessageComponentCollector({ filter, time: parseTimeString("60s") });
 
-            collector.on('collect', async (buttonInteraction) => {
-                if (buttonInteraction.customId === 'next_page') {
-                    currentPage++;
-                } else if (buttonInteraction.customId === 'prev_page') {
-                    currentPage--;
-                }
+                collector.on('collect', async (buttonInteraction) => {
+                    if (buttonInteraction.customId === 'next_page') {
+                        currentPage++;
+                    } else if (buttonInteraction.customId === 'prev_page') {
+                        currentPage--;
+                    }
 
-                embed.setDescription(generateQueueDescription(currentPage)).setFooter({ text: `Page ${currentPage + 1} of ${totalPages}` });
-                row.components[0].setDisabled(currentPage === 0);
-                row.components[1].setDisabled(currentPage === totalPages - 1);
+                    updateEmbed();
+                    row.components[0].setDisabled(currentPage === 0);
+                    row.components[1].setDisabled(currentPage === totalPages - 1);
 
-                await buttonInteraction.update({ embeds: [embed], components: [row] });
-            });
+                    await buttonInteraction.update({ embeds: [embed], components: [row] });
+                });
 
-            collector.on('end', () => {
-                row.components.forEach(button => button.setDisabled(true));
-                interaction.editReply({ components: [row] });
-            });
+                collector.on('end', () => {
+                    row.components.forEach(button => button.setDisabled(true));
+                    interaction.editReply({ components: [row] });
+                });
+            }
 
         } catch (err) {
             logger(err, "error");
-            return interaction.reply({ 
+            return interaction.editReply({ 
                 embeds: [embed.setDescription(`\`❌\` | An error occurred: ${err.message}`)], 
                 ephemeral: true 
             });

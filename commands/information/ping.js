@@ -10,7 +10,7 @@ module.exports = {
         .setDMPermission(true),
 
     run: async ({ interaction, client }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
         try {
             const wsPing = client.ws.ping;
@@ -19,7 +19,10 @@ module.exports = {
             await fetch("https://discord.com/api/v10/gateway");
             const apiPing = Date.now() - startTime;
 
-            return interaction.reply({ embeds: [embed.setDescription(`Pong! 🏓 WebSocket Latency: ${wsPing}ms | Discord API Latency: ${apiPing}ms`)] });
+            return interaction.reply({ embeds: [embed
+                .setAuthor({name: "Pong 🏓", iconURL: client.user.displayAvatarURL() })
+                .setDescription(`WebSocket Latency: ${wsPing}ms\nDiscord API Latency: ${apiPing}ms`)] 
+            });
 
         } catch (err) {
             logger(err, "error");

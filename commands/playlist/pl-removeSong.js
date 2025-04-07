@@ -1,13 +1,14 @@
 const { 
     SlashCommandBuilder, 
     ActionRowBuilder, 
-    ButtonBuilder,
+    ButtonBuilder, 
     EmbedBuilder, 
     ModalBuilder, 
     TextInputBuilder, 
-    TextInputStyle,
-    ButtonStyle
+    TextInputStyle, 
+    ButtonStyle 
 } = require("discord.js");
+const { parseTimeString } = require("../../utils/parseTimeString");
 const { logger } = require("../../utils/logger");
 const formatDuration = require("../../utils/formatDuration");
 const playlist = require("../../schemas/playlist");
@@ -26,21 +27,25 @@ module.exports = {
         ),
 
     run: async ({ interaction }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         const selectedPlaylistName = interaction.options.getString("playlist");
         const userId = interaction.user.id;
 
         try {
             await interaction.deferReply();
-            await interaction.editReply({embeds: [embed.setDescription("\`🔎\` | Loading playlist...")]});
+            await interaction.editReply({ embeds: [embed.setDescription("`🔎` | Loading playlist...")] });
 
             const selectedPlaylist = await playlist.findOne({ name: selectedPlaylistName, userId: userId });
 
             if (!selectedPlaylist) {
-                return interaction.editReply({ embeds: [embed.setDescription("\`❌\` | Playlist not found.")], ephemeral: true });
+                return interaction.editReply({ embeds: [embed.setDescription("`❌` | Playlist not found.")], ephemeral: true });
             }
 
             const songs = selectedPlaylist.songs;
+
+            if (!songs.length) {
+                return interaction.editReply({ embeds: [embed.setDescription("`❌` | No song(s) found in selected playlist.")], ephemeral: true });
+            }
 
             const songsPerPage = 10;
             const totalPages = Math.ceil(songs.length / songsPerPage);
@@ -51,7 +56,7 @@ module.exports = {
                 const end = Math.min(start + songsPerPage, songs.length);
                 return songs.slice(start, end).map((song, index) => 
                     `**\`\`\`autohotkey\n${start + index + 1}. Title       : ${song.title}\n` +
-                    `Duration    : ${formatDuration(song.time)}\n` +
+                    `   Duration    : ${formatDuration(song.time)}\n` +
                     `\`\`\`**`
                 ).join("\n");
             };
@@ -92,7 +97,7 @@ module.exports = {
             });
 
             const filter = (buttonInteraction) => buttonInteraction.user.id === userId;
-            const collector = reply.createMessageComponentCollector({ filter, time: 300000 });
+            const collector = reply.createMessageComponentCollector({ filter, time: parseTimeString("300s") });
 
             collector.on("collect", async (buttonInteraction) => {
                 if (buttonInteraction.customId === "next_page") {
@@ -116,10 +121,9 @@ module.exports = {
                     await buttonInteraction.showModal(modal);
 
                     const row = createButtons();
-                    if (row) {
-                        row[0].components.forEach(button => button.setDisabled(true));
-                        await interaction.editReply({ components: row });
-                    }
+                    row[0].components.forEach(button => button.setDisabled(true));
+                    await interaction.editReply({ components: row 
+                    });
 
                     const modalInteraction = await buttonInteraction.awaitModalSubmit({
                         time: 60000,
@@ -129,7 +133,7 @@ module.exports = {
                     const songNumber = parseInt(modalInteraction.fields.getTextInputValue("song_number")) - 1;
 
                     if (!selectedPlaylist || songNumber < 0 || songNumber >= selectedPlaylist.songs.length) {
-                        return modalInteraction.reply({ embeds: [embed.setDescription("\`❌\` | Invalid song number or playlist not found.")], ephemeral: true });
+                        return modalInteraction.reply({ embeds: [embed.setDescription("`❌` | Invalid song number or playlist not found.")], ephemeral: true });
                     }
 
                     const songToRemove = selectedPlaylist.songs[songNumber];
@@ -172,7 +176,7 @@ module.exports = {
         const focusedValue = interaction.options.getFocused();
         if (focusedValue.length <= 1) return;
 
-        const userPlaylists = await Playlist.find({ userId: interaction.user.id });
+        const userPlaylists = await playlist.find({ userId: interaction.user.id });
 
         const filteredPlaylists = userPlaylists.filter(pl => pl.name.toLowerCase().includes(focusedValue.toLowerCase()));
 

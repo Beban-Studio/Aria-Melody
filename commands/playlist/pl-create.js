@@ -15,7 +15,7 @@ module.exports = {
         ),
 
     run: async ({ interaction }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
         try {
             const playlistName = interaction.options.getString('name');

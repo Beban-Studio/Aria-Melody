@@ -5,6 +5,7 @@ const {
     EmbedBuilder, 
     ButtonStyle 
 } = require("discord.js");
+const { parseTimeString } = require("../../utils/parseTimeString");
 const { logger } = require("../../utils/logger");
 const playlist = require("../../schemas/playlist");
 const config = require("../../config");
@@ -16,7 +17,7 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ interaction }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         
         try {
             await interaction.deferReply();
@@ -73,7 +74,7 @@ module.exports = {
             };
 
             if (row) {
-                const collector = reply.createMessageComponentCollector({ filter, time: 60000 });
+                const collector = reply.createMessageComponentCollector({ filter, time: parseTimeString("60s") });
 
                 collector.on('collect', async (buttonInteraction) => {
                     if (buttonInteraction.customId === 'next_page') {

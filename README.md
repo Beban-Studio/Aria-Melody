@@ -3,7 +3,7 @@
 ---
 
 <p align="center">
-  <strong>Aria Melody is a simple music bot which is made using Riffy package</strong>
+  <strong>Advance Discord music bot using Riffy Lavalink Client and CommandKit.</strong>
   </p>
 
 <p align="center">
@@ -69,27 +69,27 @@ npm install
 -   Rename `.env.example` to `.env` and fill out these variables according to yours.
 ```
 ##########################################################
-# RENAME THIS FILE TO .env AFTER FILLING THE INFORMATION
+# RENAME THIS FILE TO .env AFTER FILLING THE INFORMATION #
 ##########################################################
 
 # Discord Bot Configuration
-CLIENT_TOKEN=YOUR_DISCORD_BOT_TOKEN_HERE
-CLIENT_ID=YOUR_DISCORD_CLIENT_ID_HERE
-DEFAULT_COLOR=YOUR_HEX_COLOR  # Default embed color, you can change it to any hex color code ( remove the hashsign a.k.a # )
+CLIENT_TOKEN=YOUR_BOT_TOKEN_HERE
+CLIENT_ID=YOUR_BOT_ID_HERE
+DEV_ID=YOUR_DEV_USER_ID_HERE,ANOTHER_DEV_USER_ID_HERE # Comma-separated if multiple
+DEV_GUILD=YOUR_DEV_GUILD_ID_HERE,ANOTHER_DEV_GUILD_ID_HERE # Comma-separated if multiple
 
 # MongoDB Configuration
-MONGO_URI=mongodb://username:password@host:port/database_name
+MONGO_URI=YOUR_MONGODB_URI_HERE
 
-# Developer Information
-DEV_ID=YOUR_GUILD_ID  # Replace with your Discord ID (separated by comma "," if more than one)
-DEV_GUILD=YOUR_USER_ID  # Replace with your Developer Guild ID (separated by comma "," if more than one)
-
-# Default Search Platform
-DEFAULT_SEARCH_PLATFORM=spsearch  # Default track searching engine e.g: spsearch, soundcloud, ytsearch, etc.
+# Embed Color
+EMBED_COLOR=7289DA # Example hex color for embeds without the # hasign
 
 # Spotify Configuration
 SPOTIFY_CLIENTID=YOUR_SPOTIFY_CLIENT_ID_HERE
 SPOTIFY_SECRET=YOUR_SPOTIFY_CLIENT_SECRET_HERE
+
+# Default Search Platform
+DEFAULT_SEARCH_PLATFORM=spsearch # Default search platform, can be changed as needed
 ```
 -   Starts the bot by running
 ```
@@ -100,35 +100,39 @@ You only need to run this command once to deploy and flush all the command from 
 <details>
 <summary>Aria Melody Lavalink v3 Configuration</summary>
 
-On Aria.js change the rest version to `v3`
+On `config.js` change the following:
 ```diff
-client.riffy = new Riffy(client, config.nodes, {
-    send: (payload) => {
-        const guild = client.guilds.cache.get(payload.d.guild_id);
-        if (guild) guild.shard.send(payload);
+    riffyOptions: {
+        leaveTimeout: parseTimeString("1m"), 
+-       restVersion: "v4", 
++       restVersion: "v3", 
+        reconnectTries: Infinity, 
+        reconnectTimeout: parseTimeString("6s"), 
+        defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch", 
+        plugins: [
+            new Spotify({
+                clientId: process.env.SPOTIFY_CLIENTID || "",
+                clientSecret: process.env.SPOTIFY_SECRET || "" 
+            })
+        ],
     },
-    defaultSearchPlatform: config.defaultSearchPlatform,
-    reconnectTries: 15,
--   restVersion: "v4",
-+   restVersion: "v3",
-    plugin: [spotify]
-});
 ```
 
-On ../commands/music/play.js
+On `play.js` change the following:
 ```diff
-- if (loadType === "playlist") {
-+ if (loadType === 'PLAYLIST_LOADED') {
+-	  if (loadType === "playlist") {
++     if (loadType === 'PLAYLIST_LOADED') {
+
 			for (const track of resolve.tracks) {
 				track.info.requester = interaction.member;
 				player.queue.add(track);
 			}
 
-			await interaction.editReply({ embeds: [embed.setDescription(`\`➕\` | **[${playlistInfo.name}](${query})** • ${tracks.length} Track(s) • ${interaction.member}`)] });
+			await interaction.editReply({ embeds: [embed.setDescription(`\`➕\` | **[${playlistInfo.name}](${query})** • \`${tracks.length}\` Track(s) • ${interaction.member}`)] });
 			if (!player.playing && !player.paused) return player.play();
 
-- } else if (loadType === "search" || loadType === "track") {
-+ } else if (loadType === 'SEARCH_RESULT' || loadType === 'TRACK_LOADED') {
+-		} else if (loadType === "search" || loadType === "track") {
++       } else if (loadType === 'SEARCH_RESULT' || loadType === 'TRACK_LOADED') {
 			const track = tracks.shift();
 				
 			track.info.requester = interaction.member;
@@ -137,7 +141,36 @@ On ../commands/music/play.js
 			await interaction.editReply({ embeds: [embed.setDescription(`\`➕\` | **[${track.info.title}](${track.info.uri})** • ${interaction.member}`)] });
 			if (!player.playing && !player.paused) return player.play();
 
+		} else {
+			return interaction.editReply({ embeds: [embed.setDescription("\`❌\` | There were no results found for your query.")] });
 		}
+  	},
+```
+
+On `pl-addSong.js` change the following:
+```diff
+  try {
+    // ... (rest of the code remains the same)
+-    if (loadType === "playlist") {
++    if (loadType === "PLAYLIST_LOADED") {
+      const songsToAdd = resolve.tracks.map(track => ({
+        url: track.info.uri,
+        title: track.info.title,
+        artist: track.info.author,
+        time: track.info.length
+      }));
+      // ... (rest of the code remains the same)
+-    } else if (loadType === "search" || loadType === "track") {
++    } else if (loadType === "search" || loadType === "track") {
+      const track = tracks.shift();
+      const song = { 
+        url: track.info.uri, 
+        title: track.info.title, 
+        artist: track.info.author,
+        time: track.info.length
+      };
+      // ... (rest of the code remains the same)
+     }
 ```
 </details>
 

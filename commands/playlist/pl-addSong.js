@@ -4,6 +4,7 @@ const {
     ActionRowBuilder, 
     EmbedBuilder
 } = require('discord.js');
+const { parseTimeString } = require("../../utils/parseTimeString");
 const { logger } = require("../../utils/logger");
 const playlist = require("../../schemas/playlist");
 const config = require('../../config');
@@ -38,7 +39,7 @@ module.exports = {
         ),
 
     run: async ({ interaction, client }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         const query = interaction.options.getString('query');
         const userId = interaction.user.id;
 
@@ -79,7 +80,7 @@ module.exports = {
                 });
 
                 const filter = (i) => i.customId === 'select_playlist' && i.user.id === userId;
-                const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+                const collector = interaction.channel.createMessageComponentCollector({ filter, time: parseTimeString("60s") });
 
                 collector.on('collect', async (i) => {
                     const selectedPlaylistName = i.values[0];
@@ -137,7 +138,7 @@ module.exports = {
                 });
 
                 const filter = (i) => i.customId === 'select_playlist' && i.user.id === userId;
-                const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
+                const collector = interaction.channel.createMessageComponentCollector({ filter, time: parseTimeString("60s") });
 
                 collector.on('collect', async (i) => {
                     const selectedPlaylistName = i.values[0];

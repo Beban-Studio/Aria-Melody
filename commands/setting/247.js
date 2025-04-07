@@ -11,7 +11,7 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ client, interaction }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         const player = client.riffy.players.get(interaction.guildId);
 
         if (!player) {
@@ -28,13 +28,15 @@ module.exports = {
 
             if (data) {
                 data.reconnect.status = !data.reconnect.status;
+                data.reconnect.textChannel = player.textChannel || interaction.channelId;
+                data.reconnect.voiceChannel = player.voiceChannel || interaction.member.voice.channelId;
                 await data.save();
             } else {
                 const newData = new guild({
                     guildId: interaction.guildId,
                     reconnect: {
                         status: true,
-                        textChannel: player.textChannel ||interaction.channelId,
+                        textChannel: player.textChannel || interaction.channelId,
                         voiceChannel: player.voiceChannel || interaction.member.voice.channelId,
                     },
                     buttons: true

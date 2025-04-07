@@ -39,7 +39,7 @@ module.exports = {
             const apiPing = Date.now() - startTime;
 
             const embed = new EmbedBuilder()
-                .setColor(config.default_color)
+                .setColor(config.clientOptions.embedColor)
                 .setThumbnail(client.user.displayAvatarURL({ dynamic: true, size: 2048 }))
                 .setTitle(`${client.user.username} Information`)
                 .setDescription(`\`\`\`yml\nName: ${client.user.username} (${client.user.id})\nWebsocket Ping: ${client.ws.ping}ms\nApi Ping: ${apiPing}ms\n\`\`\``)
@@ -50,14 +50,14 @@ module.exports = {
                         inline: false,
                     },
                     {
-                        name: "Bot stats",
+                        name: "Bot Stats",
                         value: `\`\`\`yml\nGuilds: ${
                             client.guilds.cache.size
                         } \nNodeJS: ${nodeVersion}\`\`\``,
                         inline: true,
                     },
                     {
-                        name: "System stats",
+                        name: "System Stats",
                         value: `\`\`\`yml\nOS: ${osVersion}\nUptime: ${systemUptime}\n\`\`\``,
                         inline: false,
                     },
@@ -68,7 +68,7 @@ module.exports = {
                 embeds: [embed]
             })
         } catch (err) {
-            const embed = new EmbedBuilder().setColor(config.default_color);
+            const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
             logger(err, "error");
             return interaction.reply({ 

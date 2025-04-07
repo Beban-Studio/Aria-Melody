@@ -9,7 +9,7 @@ module.exports = {
         .setDMPermission(false),
 
     run: async ({ interaction, client }) => {    
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
         try {
             const player = client.riffy.players.get(interaction.guildId);
