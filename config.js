@@ -1,98 +1,66 @@
+const { parseTimeString } = require("./utils/parseTimeString");
+const { Spotify } = require("riffy-spotify");
 require("dotenv").config();
 
-/* 
- * FILL IN ALL THE REQUIRED INFO
- * PLEASE FOR THE LOVE OF GOD DON'T SHARE YOUR API KEYS
- * AND ALSO FILL ALL THE INFORMATION BEFORE YOU ASK FOR HELP TO THE SUPPORT SERVER 
- */
-
 module.exports = {
+    clientOptions: {
+        clientToken: process.env.CLIENT_TOKEN || "", // Your bot's token
+        clientId: process.env.CLIENT_ID || "", // Your bot's id
+        devId: process.env.DEV_ID?.split(",") || [""], // Your user id(s) for development purposes
+        devGuild: process.env.DEV_GUILD?.split(",") || [""], // Your guild id(s) for development purposes
+        mongoUri: process.env.MONGO_URI || "", // Your MongoDB URI
+        embedColor: process.env.EMBED_COLOR || "", // Your embed hex code
+    },
 
-    /**
-     * Client token | Used to login to the bot
-     */
-    client_token: process.env.CLIENT_TOKEN || "", 
-    /**
-     * Client id | Used to check bot information and such
-     */
-    client_id: process.env.CLIENT_ID || "",
-    /**
-     * Default color | The default color of the bot's embeds
-     */
-    default_color: process.env.DEFAULT_COLOR || "",
-    /**
-     * Mongo URL | The mongodb url to store database information
-     */
-    mongodb_url: process.env.MONGO_URI || "",
-    /**
-     * Developer id | The bot developer's id to use dev only command
-     */
-    developer_id: process.env.DEV_ID || "",
-    /**
-     * Developer guild | The bot development's guild id to use dev only command
-     */
-    developer_guild: process.env.DEV_GUILD || "",
-    /**
-     * Default search platform | The default search platform of the music feature ( This can be spsearch, ytsearch, ytmsearch, scsearch )
-     */
-    defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch",
+    spotify: {
+        clientId: process.env.SPOTIFY_CLIENTID || "", // Your Spotify client id
+        clientSecret: process.env.SPOTIFY_SECRET || "" // Your Spotify client secret
+    },
 
-    /**
-     * The lavalink nodes information
-     * Check the available lavalink server on https://deployments.beban.tech
-     */
-    nodes: [
+    riffyOptions: {
+        leaveTimeout: parseTimeString("15s"), // How long the bot will wait before leaving a voice channel when empty/queueEnd, default 1 minute
+        restVersion: "v4", // The REST version of lavalink you want to use
+        reconnectTries: Infinity, // How many times to try reconnecting to lavalink
+        reconnectTimeout: parseTimeString("6s"), // How long to wait before reconnecting to lavalink, default 6 seconds
+        defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch", // Default search platform
+        plugins: [
+            new Spotify({
+                clientId: process.env.SPOTIFY_CLIENTID || "", // Your Spotify client id
+                clientSecret: process.env.SPOTIFY_SECRET || "" // Your Spotify client secret
+            })
+        ],
+    },
+
+    riffyNodes: [
         {
-            name: "Lavalink", // Just change it as you want
+            name: "Lavalink", // The name of the node
             host: "lavalink.beban.tech", // The hostname of the lavalink server
             port: 80,  // The port of the lavalink server
             password: "bytebee_", // The password of lavalink server
             secure: false, // Does the lavalink server use secure connection
-            autoResume: true // Just keep this as true
         },
     ],
 
-    /**
-     * The spotify client information for spotify source plugin
-     */
-    spotify: {
-        ClientId: process.env.SPOTIFY_CLIENTID || "",
-        ClientSecret: process.env.SPOTIFY_SECRET || ""
-    },
-
-    /**
-     * The bot's presence setting
-     */
-    presence: {
-		/**
-		 * online, idle, dnd, invisible, ...
-		 */
-		status: "idle",
-		activities: [
-			{
-				name: "{Guilds} servers",
-				type: "WATCHING",
-				data: (client) => {
-					return {
-						Guilds: client.guilds.cache.size,
-					};
-				},
-			},
-			{
-				name: "Spotify",
-				type: "LISTENING",
-			},
+    presence: { // Your bot's presence
+        status: "idle",
+        activities: [
+            {
+                name: "{Guilds} servers",
+                type: "WATCHING",
+                data: (client) => {
+                    return {
+                        Guilds: client.guilds.cache.size,
+                    };
+                },
+            },
+            {
+                name: "Spotify",
+                type: "LISTENING",
+            },
             {
                 name: "This bot is made by Beban Community🧡",
-                type: "CUSTOM"
-            }
-		],
-	},
+                type: "CUSTOM",
+            },
+        ],
+    },
 }
-
-/**
- * Aria Melody Source Code
- * Author : Juna
- * Inspired by Lunox, Sudhan's music bot, Riffy music bot, etc...
- * Feel free to edit this source code, but please leave some credit for the author
- */
