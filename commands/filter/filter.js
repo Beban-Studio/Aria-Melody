@@ -30,7 +30,7 @@ module.exports = {
         ),
 
     run: async ({ interaction, client }) => {
-        const embed = new EmbedBuilder().setColor(config.default_color);
+        const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
         const filterOption = interaction.options.getString("option");
 
         try {
