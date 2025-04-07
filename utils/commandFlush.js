@@ -1,11 +1,11 @@
 const { REST } = require("@discordjs/rest");
-const { client_token, client_id } = require("../config");
+const { clientOptions } = require("../config");
 const { Routes } = require("discord-api-types/v10");
 
 (async () => {
-    const rest = new REST({ version: "10" }).setToken(client_token);
+    const rest = new REST({ version: "10" }).setToken(clientOptions.clientToken);
 
         console.log("Bot has started to delete commands...");
-        await rest.put( Routes.applicationCommands(client_id), { body: [] });
+        await rest.put( Routes.applicationCommands(clientOptions.clientId), { body: [] });
         console.log("Done");
 })();
