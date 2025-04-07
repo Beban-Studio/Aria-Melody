@@ -32,22 +32,27 @@ module.exports = {
 		),
 
 	run: async ({ interaction, client }) => {
-		if (!interaction.guild.members.me.permissionsIn(interaction.channel).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])) {
-			return interaction.reply({ content: "\`❌\` | Bot can\'t access the channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server", ephemeral: true })
-		}
-		if (!interaction.guild.members.me.permissionsIn(interaction.member.voice.channel.id).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
-			return interaction.reply({ content: "\`❌\` | Bot can\'t connect to the voice channel your currently in\n\`⚠️\` | Please check Bot\`s permission on this server", ephemeral: true })
-		}
+		const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
+
+        if (!interaction.guild.members.me.permissionsIn(interaction.channel).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])) {
+            return interaction.reply({ embeds: ["\`❌\` | Bot can't access the channel you're currently in. Please check the bot's permission on this server"], ephemeral: true });
+        }
+        if (!interaction.guild.members.me.permissionsIn(interaction.member.voice.channel.id).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
+            return interaction.reply({ embeds: ["\`❌\` | Bot can't connect to the voice channel you're currently in. Please check the bot's permission on this server"], ephemeral: true });
+        }
 
 		await interaction.deferReply();
-
-		const embed = new EmbedBuilder().setColor(config.default_color);
+		await interaction.editReply({embeds: [embed.setDescription("\`🔎\` | Searching...")]});
 
 		const query = interaction.options.getString("query");
 		
 		let player = client.riffy.players.get(interaction.guildId);
-		
-		if (!player) {
+        if (player && player.voiceChannel !== interaction.member.voice.channelId) {
+            return interaction.editReply({ 
+				embeds: [embed.setDescription("\`❌\` | You must be in the same voice channel as the bot.")], 
+				ephemeral: true
+			});
+        } else if (!player) {
 			player = client.riffy.createConnection({
 				defaultVolume: 50,
 				guildId: interaction.guildId,
@@ -66,7 +71,7 @@ module.exports = {
 				player.queue.add(track);
 			}
 
-			await interaction.editReply({ embeds: [embed.setDescription(`\`➕\` | **[${playlistInfo.name}](${query})** • ${tracks.length} Track(s) • ${interaction.member}`)] });
+			await interaction.editReply({ embeds: [embed.setDescription(`\`➕\` | **[${playlistInfo.name}](${query})** • \`${tracks.length}\` Track(s) • ${interaction.member}`)] });
 			if (!player.playing && !player.paused) return player.play();
 
 		} else if (loadType === "search" || loadType === "track") {
@@ -82,6 +87,10 @@ module.exports = {
 			return interaction.editReply({ embeds: [embed.setDescription("\`❌\` | There were no results found for your query.")] });
 		}
   	},
+	options: {
+		inVoice: true,
+	},
+	
 
 	autocomplete: async ({ interaction, client }) => {
 		const focusedValue = interaction.options.getFocused();
