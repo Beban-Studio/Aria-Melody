@@ -64,3 +64,10 @@ module.exports = {
         ],
     },
 }
+
+/**
+  * Aria Melody Source Code
+  * Author : Juna
+  * Inspired by Lunox, Sudhan's music bot, Riffy music bot, etc...
+  * Feel free to edit this source code, but please leave some credit for the author
+  */
