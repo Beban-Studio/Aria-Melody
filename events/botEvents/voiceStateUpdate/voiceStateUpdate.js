@@ -38,7 +38,7 @@ module.exports = async (oldState, newState, client) => {
         if (emptyVoice || notPlaying) {
             await delay(config.riffyOptions.leaveTimeout);
             const vcMembers = oldState.guild.members.me.voice.channel?.members.size;
-            const leaveEmbedChannel = await client.channels.cache.get(guildData.reconnect.textChannel);
+            const leaveEmbedChannel = await client.channels.fetch(guildData.reconnect.textChannel || oldStatePlayer.textChannel);
             const stillBotAlone = oldState.guild.members.me.voice.channel?.members.filter((m) => !m.user.bot).size === 0;
             const stillNotPlaying = !oldStatePlayer.playing && !oldStatePlayer.queue.current;
 
