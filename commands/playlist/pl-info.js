@@ -96,7 +96,7 @@ module.exports = {
                         currentPage--;
                     }
 
-                    embed.setDescription(generatePlaylistDescription(currentPage))
+                    embed.setDescription(generateSongList(currentPage))
                          .setFooter({ text: `Name: ${selectedPlaylist.name} | Page ${currentPage + 1} of ${totalPages}` });
                     row.components[0].setDisabled(currentPage === 0);
                     row.components[1].setDisabled(currentPage === totalPages - 1);
