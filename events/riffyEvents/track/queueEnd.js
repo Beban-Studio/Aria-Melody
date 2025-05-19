@@ -13,11 +13,14 @@ module.exports = async (client) => {
             player.autoplay(player);
         } else {
             player.destroy();
-            await channel.send({embeds: [embed.setDescription("The queue is empty. You can make the bot stays by using \`247\` command.")]});
             
-            setTimeout(() => {
-                message.delete().catch((err) => {});
-            }, parseTimeString("30s"));
+            return channel.send({ embeds: [embed.setDescription("The queue is empty. You can make the bot stays by using \`247\` command.")] }).then((msg) => {
+                if (!msg) return;
+
+                setTimeout(() => {
+                    msg.delete().catch((err) => {});
+                }, parseTimeString("30s"));
+            });
         }
     });
 };
