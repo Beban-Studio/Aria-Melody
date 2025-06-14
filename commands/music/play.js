@@ -35,10 +35,10 @@ module.exports = {
 		const embed = new EmbedBuilder().setColor(config.clientOptions.embedColor);
 
         if (!interaction.guild.members.me.permissionsIn(interaction.channel).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages])) {
-            return interaction.reply({ embeds: ["\`❌\` | Bot can't access the channel you're currently in. Please check the bot's permission on this server"], ephemeral: true });
+            return interaction.reply({ content: "\`❌\` | Bot can't access the channel you're currently in. Please check the bot's permission on this server", ephemeral: true });
         }
         if (!interaction.guild.members.me.permissionsIn(interaction.member.voice.channel.id).has([PermissionFlagsBits.ViewChannel, PermissionFlagsBits.Connect])) {
-            return interaction.reply({ embeds: ["\`❌\` | Bot can't connect to the voice channel you're currently in. Please check the bot's permission on this server"], ephemeral: true });
+            return interaction.reply({ content: "\`❌\` | Bot can't connect to the voice channel you're currently in. Please check the bot's permission on this server", ephemeral: true });
         }
 
 		await interaction.deferReply();
