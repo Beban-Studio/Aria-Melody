@@ -21,9 +21,19 @@ module.exports = async (oldState, newState, client) => {
         newStatePlayer.state !== 2 ? newStatePlayer.destroy() : true;
     }
 
-    const guildData = await guild.findOne({ guildId: newState.guild.id || oldState.guild.id });
+    let guildData = await guild.findOne({ guildId: newState.guild.id || oldState.guild.id });
 
-    if (guildData && guildData.reconnect.status) return;
+    if (!guildData) {
+        guildData = new guild({
+            guildId: newState.guild.id,
+            reconnect: {
+                status: false,
+            }
+        });
+        await guildData.save();
+    }
+
+    if (guildData.reconnect.status) return;
 
     const oldStatePlayer = client.riffy.players.get(oldState.guild.id || newState.guild.id);
 
@@ -45,7 +55,7 @@ module.exports = async (oldState, newState, client) => {
             if ((stillBotAlone || stillNotPlaying) && (!vcMembers || vcMembers === 1 || vcMembers > 1)) {
                 if (oldStatePlayer.message) await oldStatePlayer.message.delete().catch((err) => {});
 
-                oldStatePlayer.destroy()
+                oldStatePlayer.destroy();
 
                 return leaveEmbedChannel.send({ embeds: [embed.setDescription("Disconnecting from the voice channel due to inactivity. You can disable this by using \`247\` command.")] }).then((msg) => {
                     if (!msg) return;
