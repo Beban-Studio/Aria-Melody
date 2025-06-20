@@ -31,7 +31,7 @@ This branch is where new ideas and improvements are being tested. Here's a glimp
 -   🎼 Dedicated Music Request Channel feature.
 -   🛠️ Utilizing the latest development version of **[CommandKit](https://www.npmjs.com/package/commandkit) (`@dev`)**.
 -   ✨ Integrating the newest updates from **[Riffy](https://www.npmjs.com/package/riffy) (`latest`)**.
--   ✅ Sticking with CommonJS for now.
+-   ✅ Switching to ESM instead of CommonJS.
 -   💡 And many more enhancements and experimental features!
 
 ### `📝` Developer Note
