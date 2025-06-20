@@ -3,70 +3,60 @@
 ---
 
 <p align="center">
-  <strong>Advance Discord music bot using Riffy Lavalink Client and CommandKit.</strong>
-  </p>
+  <strong style="color:orange; font-size:1.2em;">⚠️ Note: You are viewing the README for the <code>dev</code> branch. This is a development playground for Aria Melody. Expect experimental features, potential instability, and ongoing changes. For the stable version, please see the <code>master</code> branch.</strong>
+</p>
+
+---
 
 <p align="center">
-    <a href="https://github.com/BebanCode/Aria-Melody"><b>Github</b></a> •
+  <strong>Development Branch for Aria Melody - Advance Discord music bot.</strong>
+</p>
+
+<p align="center">
+    <a href="https://github.com/Beban-Studio/Aria-Melody/tree/master"><b>Stable Branch (master)</b></a> •
     <a href="https://discord.gg/9eCgpGuZAa"><b>Support</b></a>
 </p>
 
-<div align="center">
-  <a href="https://www.npmjs.com/package/commandkit"><img src="https://img.shields.io/badge/CommandKit-@0.1.10-purple"/>
-  <a href="https://www.npmjs.com/package/riffy"><img src="https://img.shields.io/badge/Riffy-@15b650b-blue"/>
-</div>
-<p align="center"> 
+<p align="center">
   <a href="https://discord.gg/9eCgpGuZAa" target="_blank"> <img src="https://discordapp.com/api/guilds/1215235509958479894/widget.png?style=banner2"/> </a>
 </p>
 
 #
 
-### `📢` Top Features
--   🎻 Using **[Riffy](https://www.npmjs.com/package/riffy) `@15b650b`** Lavalink Client
--   🌊 Support Lavalink v3 & v4 Connection
--   🍸️ Slash Command
--   🎵 Music System
--   📦 Playlist System
--   🎙️ Lots of Sound Filters
--   💺 24/7 in Voice Channel
--   🔎 AutoPlay [**Support Youtube, Spotify, Soundcloud**]
--   🫧 Clean UI
--   🏆️ Easy to Use
--   And Many More...!
+### `🚧` Upcoming Features & Focus for `dev`
+This branch is where new ideas and improvements are being tested. Here's a glimpse of what's being worked on or planned:
 
-### `🎵` Available Lavalink
-**Version 4.0.8 | Hosted by [BebanCode](https://github.com/BebanCode)**
-```yml
-Host : lavalink.beban.tech
-Port : 80
-Pass : bytebee_
-Region : US, Utah, Salt Lake City
-Secure : false
-Plugins :
-  - sponsorblock-plugin
-  - youtube-plugin
-  - duncteBot-plugin
-  - java-lyrics-plugin
-  - lavalyrics-plugin
-  - lavasrc-plugin
-```
+-   🚀 Implementing hybrid command handling (Slash & Message Commands).
+-   🏗️ Major refactoring for a better, more maintainable project structure.
+-   🎼 Dedicated Music Request Channel feature.
+-   🛠️ Utilizing the latest development version of **[CommandKit](https://www.npmjs.com/package/commandkit) (`@dev`)**.
+-   ✨ Integrating the newest updates from **[Riffy](https://www.npmjs.com/package/riffy) (`latest`)**.
+-   ✅ Sticking with CommonJS for now.
+-   💡 And many more enhancements and experimental features!
 
-### `📍` Requirements
--   Node.js `v16` or higher
+### `📝` Developer Note
+> "I want my code to at least look good if the function is bad or something."
+>
+> This branch also serves as a space to experiment with code style and organization. While functionality is key, readability and a clean codebase are also priorities here.
+
+### `📍` Core Requirements (May change with development)
+-   Node.js `v18` or higher
 -   MongoDB `v5` or higher
 -   Spotify API credentials
--   Lavalink server [**[Check above](https://github.com/Beban-Studio/Aria-Melody#available-lavalink)**]
+-   Lavalink server [**[Check above](https://github.com/Beban-Studio/Aria-Melody/tree/dev#available-lavalink-for-testing)**]
+-   **Note for `dev` branch:** Ensure compatibility with `commandkit@dev` and the latest `riffy` version, which might have different or newer requirements as development progresses.
 
-### `⚙` Configuration & Installation
--   Clone this repository.
+### `⚙` Configuration & Installation (for `dev` branch)
+-   Clone the `dev` branch of this repository:
+```bash
+git clone https://github.com/Beban-Studio/Aria-Melody.git -b dev
+cd Aria-Melody
 ```
-https://github.com/Beban-Studio/Aria-Melody.git
-```
--   Open the main folder then install all the package.
-```
+-   Install dependencies (this will include `commandkit@dev` and latest `riffy` as per `package.json`):
+```bash
 npm install
 ```
--   Rename `.env.example` to `.env` and fill out these variables according to yours.
+-   Rename `.env.example` to `.env` and fill out the variables:
 ```
 ##########################################################
 # RENAME THIS FILE TO .env AFTER FILLING THE INFORMATION #
@@ -91,28 +81,32 @@ SPOTIFY_SECRET=YOUR_SPOTIFY_CLIENT_SECRET_HERE
 # Default Search Platform
 DEFAULT_SEARCH_PLATFORM=spsearch # Default search platform, can be changed as needed
 ```
--   Starts the bot by running
-```
+-   Deploy commands (run once):
+```bash
 npm run deploy
 ```
-You only need to run this command once to deploy and flush all the command from the bot the bot, you can start it  after that by running `npm start` or `node Aria.js`
+-   Start the bot:
+```bash
+npm start
+```
+(or `node Aria.js`)
 
 <details>
-<summary>Aria Melody Lavalink v3 Configuration</summary>
+<summary>Aria Melody Lavalink v3 Configuration (If testing legacy support)</summary>
 
 On `config.js` change the following:
 ```diff
     riffyOptions: {
-        leaveTimeout: parseTimeString("1m"), 
--       restVersion: "v4", 
-+       restVersion: "v3", 
-        reconnectTries: Infinity, 
-        reconnectTimeout: parseTimeString("6s"), 
-        defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch", 
+        leaveTimeout: parseTimeString("1m"),
+-       restVersion: "v4",
++       restVersion: "v3",
+        reconnectTries: Infinity,
+        reconnectTimeout: parseTimeString("6s"),
+        defaultSearchPlatform: process.env.DEFAULT_SEARCH_PLATFORM || "spsearch",
         plugins: [
             new Spotify({
                 clientId: process.env.SPOTIFY_CLIENTID || "",
-                clientSecret: process.env.SPOTIFY_SECRET || "" 
+                clientSecret: process.env.SPOTIFY_SECRET || ""
             })
         ],
     },
@@ -134,7 +128,7 @@ On `play.js` change the following:
 -		} else if (loadType === "search" || loadType === "track") {
 +       } else if (loadType === 'SEARCH_RESULT' || loadType === 'TRACK_LOADED') {
 			const track = tracks.shift();
-				
+
 			track.info.requester = interaction.member;
 			player.queue.add(track);
 
@@ -163,9 +157,9 @@ On `pl-addSong.js` change the following:
 -    } else if (loadType === "search" || loadType === "track") {
 +    } else if (loadType === "search" || loadType === "track") {
       const track = tracks.shift();
-      const song = { 
-        url: track.info.uri, 
-        title: track.info.title, 
+      const song = {
+        url: track.info.uri,
+        title: track.info.title,
         artist: track.info.author,
         time: track.info.length
       };
@@ -174,10 +168,8 @@ On `pl-addSong.js` change the following:
 ```
 </details>
 
-
-
 ## Contributors
-We really appreciated if any of you can contribute to this project. To contribute to this project you can fork this repository and make a pull request, we will gladly check it out. If you have any suggestion or want to report any bug you can join this server: [Beban Community](https://discord.gg/9eCgpGuZAa)
+Contributions to the `dev` branch are welcome, especially for testing and iterating on upcoming features! Please fork this `dev` branch and make pull requests against it. For suggestions or bug reports related to development, use the [Beban Community](https://discord.gg/9eCgpGuZAa) server, making sure to specify you're referring to the `dev` branch.
 
 <a href="https://github.com/Beban-Studio/Aria-Melody/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=beban-studio/aria-melody" />
