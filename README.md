@@ -36,7 +36,9 @@ This branch is where new ideas and improvements are being tested and integrated.
     -   Created data managers for guild-specific settings (e.g., `request-channel`, `247`, `control-button`) and global bot statistics (e.g., command counts, message counts).
 -   🎼 **Music System Enhancements:**
     -   Continued integration with the latest **[Riffy](https://riffy.js.org) (`latest`)** for Lavalink interaction.
-    -   (If applicable, mention specific music features you've added or are focusing on, like the "Dedicated Music Request Channel" if that's still a focus).
+    -   Music request channel & Web Control as shown in these previews:
+    <video src="https://github.com/user-attachments/assets/22b8a5ff-fa2b-46c8-9e84-f27b4f53fdcb"></video>
+    <video src="https://github.com/user-attachments/assets/a7bd8779-f7de-4ead-98a9-402d34118fca"></video>
 -   ⚙️ **Development Workflow:**
     -   Utilizing the latest development version of **[CommandKit](https://commandkit.dev) (`@dev`)** for command and event handling.
     -   CommandKit's logger is now piped through the custom logging utility for unified log management.
