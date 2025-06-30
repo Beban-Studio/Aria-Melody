@@ -95,7 +95,7 @@ DEFAULT_SEARCH_PLATFORM=spsearch # Default search platform, can be changed as ne
 ```
 npm run deploy
 ```
-You only need to run this command once to deploy and flush all the command from the bot the bot, you can start it  after that by running `npm start` or `node Aria.js`
+You only need to run this command once to deploy and flush all the command from the bot, you can start it after that by running `npm start` or `node Aria.js`
 
 <details>
 <summary>Aria Melody Lavalink v3 Configuration</summary>
