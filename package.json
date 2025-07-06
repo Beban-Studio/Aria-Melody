@@ -2,6 +2,11 @@
   "name": "aria-melody",
   "version": "0.0.1",
   "description": "Advance Discord music bot using Riffy Lavalink Client and CommandKit.",
+  "imports": {
+    "#utils/*": "./src/app/utils/*.js",
+    "#schemas/*": "./src/app/databases/schemas/*.js",
+    "#dbManagers/*": "./src/app/databases/managers/*.js"
+  },
   "scripts": {
     "dev": "commandkit dev",
     "build": "commandkit build",
@@ -9,9 +14,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "dependencies": {
+    "@commandkit/cache": "^0.0.0-dev.20250512141518",
     "colors": "^1.4.0",
     "commandkit": "^1.0.0-dev.20250624130949",
     "discord.js": "^14.20.0",
@@ -20,6 +26,7 @@
     "mongoose": "^8.16.0",
     "node-fetch": "^3.3.2",
     "riffy": "^1.0.7",
+    "spotify-web-api-node": "^5.0.2",
     "typescript": "^5.8.3"
   },
   "devDependencies": {

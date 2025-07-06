@@ -1,8 +1,7 @@
+import { formatDurationDetailed, formatTimestamp, convertNumber } from '#utils/time';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { formatDurationDetailed, formatTimestamp } from '../../utils/time';
-import { getClientStatsDocument } from '../../databases/managers/clientData';
+import { getClientStatsDocument } from '#dbManagers/clientData';
 import pkg from '../../../../package.json' with { type: 'json' };
-import * as logger from '../../utils/logger';
 import fetch from 'node-fetch';
 import os from 'os';
 
@@ -18,33 +17,39 @@ export const command = {
 
 /* --- Helper function to fetch and prepare bot information data --- */
 async function getBotInfoData(client) {
-  let lavalinkNodesInfo = {
-    statsText: '```yml\nLavalink: Not Connected\n```',
-    playingPlayers: 0,
-    totalPlayers: 0,
-  };
+  let lavalinkNodesInfo = [];
 
-  if (client.riffy && client.riffy.nodes && client.riffy.nodes.size > 0) {
-    const node = client.riffy.nodes.first();
-    if (node && node.connected && node.stats && node.stats.memory) {
-      const memoryStats = node.stats.memory;
-      const usedMemoryMB = (memoryStats.used / 1024 / 1024).toFixed(2);
-      const reservableMemoryMB = (memoryStats.reservable / 1024 / 1024).toFixed(2);
-      let memoryUsagePercent = 0;
-      if (memoryStats.reservable > 0) {
-          memoryUsagePercent = ((memoryStats.used / memoryStats.reservable) * 100).toFixed(2);
-      } else if (memoryStats.allocated > 0) {
-          memoryUsagePercent = ((memoryStats.used / memoryStats.allocated) * 100).toFixed(2);
+  if (client.riffy && client.riffy.nodes) {
+    client.riffy.nodes.forEach((node) => {
+      const lavalinkNode = client.riffy.nodeMap.get(node.name);
+      if (lavalinkNode && lavalinkNode.connected && lavalinkNode.stats && lavalinkNode.stats.memory) {
+        const lavalinkMemoryUsedMB = (lavalinkNode.stats.memory.used / 1024 / 1024).toFixed(2);
+        const lavalinkMemoryReservableMB = (lavalinkNode.stats.memory.reservable / 1024 / 1024).toFixed(2);
+        const lavalinkMemoryAllocatedMB = (lavalinkNode.stats.memory.allocated / 1024 / 1024).toFixed(2);
+        
+        let memoryUsagePercent = 0;
+
+        if (lavalinkNode.stats.memory.reservable > 0) {
+          memoryUsagePercent = ((lavalinkNode.stats.memory.used / lavalinkNode.stats.memory.reservable) * 100).toFixed(2);
+        } else if (lavalinkNode.stats.memory.allocated > 0) {
+          memoryUsagePercent = ((lavalinkNode.stats.memory.used / lavalinkNode.stats.memory.allocated) * 100).toFixed(2);
+        }
+
+        const lavalinkUptime = formatDurationDetailed(lavalinkNode.stats.uptime);
+        
+        lavalinkNodesInfo.push({
+          stats: `\`\`\`yml\nName: ${node.name}\nState: Connected\nUptime: ${lavalinkUptime}\nMemory: ${memoryUsagePercent}%\nPlayers: ${lavalinkNode.stats.playingPlayers} / ${lavalinkNode.stats.players}\nLavalink Client: Riffy\`\`\`\n`,
+          playingPlayers: lavalinkNode.stats.playingPlayers,
+          totalPlayers: lavalinkNode.stats.players
+        });
+      } else {
+        lavalinkNodesInfo.push({
+          stats: `\`\`\`yml\nName: ${node.name}\nState: Not Connected or no memory stats.\n\`\`\`\n`,
+          playingPlayers: 0,
+          totalPlayers: 0
+        });
       }
-      const lavalinkUptime = formatDurationDetailed(node.stats.uptime);
-      lavalinkNodesInfo = {
-        statsText: `\`\`\`yml\nName: ${node.name}\nState: Connected\nUptime: ${lavalinkUptime}\nMemory: ${memoryUsagePercent}% (${usedMemoryMB}MB / ${reservableMemoryMB}MB)\nPlayers: ${node.stats.playingPlayers} / ${node.stats.players}\nLavalink Client: Riffy\`\`\`\n`,
-        playingPlayers: node.stats.playingPlayers,
-        totalPlayers: node.stats.players,
-      };
-    } else {
-      lavalinkNodesInfo.statsText = '```yml\nLavalink: Node found but not connected or no memory stats.\n```';
-    }
+    });
   }
 
   let botCreationDate = "Unknown";
@@ -54,19 +59,17 @@ async function getBotInfoData(client) {
     botCreationDate = formatTimestamp(client.user.createdAt);
   }
 
-  let messagesCount = 0;
   let commandsCount = 0;
   let tracksCount = 0;
   let playTime = "0s";
 
   const clientStatsDoc = await getClientStatsDocument();
   if (clientStatsDoc && clientStatsDoc.counts) {
-    messagesCount = clientStatsDoc.counts.messageCount || 0;
     commandsCount = clientStatsDoc.counts.commandCount || 0;
-    tracksCount = clientStatsDoc.counts.trackCount || 0;
+    tracksCount = convertNumber(clientStatsDoc.counts.trackCount) || 0;
     playTime = formatDurationDetailed(clientStatsDoc.counts.playTime || 0);
   } else {
-    logger.warn(`No global client stats data found in database (or error fetching).`);
+    client.logger.warn(`No global client stats data found in database (or error fetching).`);
   }
 
   const systemUptime = formatDurationDetailed(os.uptime() * 1000);
@@ -77,13 +80,12 @@ async function getBotInfoData(client) {
       await fetch("https://discord.com/api/v10/gateway");
       apiPing = Date.now() - apiFetchStart;
   } catch (err) {
-      logger.error(`Failed to fetch Discord API gateway for ping:`, err);
+      client.logger.error(`Failed to fetch Discord API gateway for ping:`, err);
   }
 
   return {
     lavalinkNodesInfo,
     botCreationDate,
-    messagesCount,
     commandsCount,
     tracksCount,
     playTime,
@@ -102,15 +104,20 @@ export const chatInput = async (ctx) => {
   try {
     await interaction.deferReply();
     const botData = await getBotInfoData(client);
+    const embedFields = botData.lavalinkNodesInfo.map(nodeInfo => ({
+      name: "<:ArrowForwardios:1362454729682194686> Lavalink Info",
+      value: nodeInfo.stats,
+      inline: false,
+    }));
 
     const embed = client.createEmbed({
       authorName: `${client.user.username} Bot Information`,
       authorIcon: client.user.displayAvatarURL(),
-      description: `\`\`\`yml\nName: ${client.user.username} (#${client.user.discriminator === '0' ? client.user.username : client.user.tag}) (${client.user.id})\nWebsocket Ping: ${client.ws.ping}ms\nAPI Ping: ${botData.apiPing}ms\n\`\`\``,
+      description: `\`\`\`yml\nName: ${client.user.username} (${client.user.id})\nWebsocket Ping: ${client.ws.ping}ms\nAPI Ping: ${botData.apiPing}ms\n\`\`\``,
       fields: [
-        { name: "<:ArrowForwardios:1362454729682194686> General Info", value: `\`\`\`yml\nVersion              : v${pkg.version}\nCreated By           : @herjuna\nCreated At           : ${botData.botCreationDate}\nTotal Servers        : ${client.guilds.cache.size} servers\nTotal Commands       : ${commandkit.commandHandler.loadedCommands?.size || 'N/A'} commands\nTotal Players        : ${botData.lavalinkNodesInfo.playingPlayers} out of ${botData.lavalinkNodesInfo.totalPlayers}\nUptime               : ${botData.systemUptime}\n\`\`\`` },
-        { name: "<:ArrowForwardios:1362454729682194686> Lavalink Info", value: botData.lavalinkNodesInfo.statsText, inline: false, },
-        { name: "<:ArrowForwardios:1362454729682194686> Usage Stats", value: `\`\`\`yml\nCommands Used        : ${botData.commandsCount} times\nMessages Sent        : ${botData.messagesCount} messages\nSongs Played         : ${botData.tracksCount} songs\nPlaying Time         : ${botData.playTime}\n\`\`\``, inline: false, },
+        { name: "<:ArrowForwardios:1362454729682194686> General Info", value: `\`\`\`yml\nVersion              : v${pkg.version}\nCreated By           : @herjuna\nCreated At           : ${botData.botCreationDate}\nTotal Servers        : ${client.guilds.cache.size} servers\nTotal Commands       : ${commandkit.commandHandler.loadedCommands?.size || 'N/A'} commands\nTotal Players        : ${botData.lavalinkNodesInfo.reduce((acc, node) => acc + node.playingPlayers, 0)} out of ${botData.lavalinkNodesInfo.reduce((acc, node) => acc + node.totalPlayers, 0)}\nUptime               : ${botData.systemUptime}\n\`\`\`` },
+        ...embedFields,        
+        { name: "<:ArrowForwardios:1362454729682194686> Usage Stats", value: `\`\`\`yml\nCommands Used        : ${botData.commandsCount} times\nSongs Played         : ${botData.tracksCount} songs\nPlaying Time         : ${botData.playTime}\n\`\`\``, inline: false, },
       ],
       footerText: "Don't Forget to vote. That helps us a lot!",
       footerIcon: "https://blog.top.gg/content/images/2021/12/Avatar---New-Logo-2.png",
@@ -122,12 +129,12 @@ export const chatInput = async (ctx) => {
       );
     await interaction.editReply({ embeds: [embed], components: [row] });
   } catch (err) {
-    logger.error(`[${interaction.commandName}:${config?.executionMode}] Error:`, err);
+    client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Error:`, err);
     const errorEmbed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | Error: ${err.message}` });
     if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ embeds: [errorEmbed], components: [] }).catch(err => logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to edit reply on error:`, err));
+        await interaction.editReply({ embeds: [errorEmbed], components: [] }).catch(err => client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to edit reply on error:`, err));
     } else {
-        await interaction.reply({ embeds: [errorEmbed], ephemeral: true, components: [] }).catch(errInner => logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to edit reply on error:`, errInner));
+        await interaction.reply({ embeds: [errorEmbed], ephemeral: true, components: [] }).catch(errInner => client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to edit reply on error:`, errInner));
     }
   }
 };
@@ -139,19 +146,25 @@ export const chatInput = async (ctx) => {
 export const message = async (ctx) => {
   const { message, client, commandkit, config } = ctx;
 
-  await message.channel.sendTyping().catch(err => logger.debug(`[${ctx.command.command.name}:${config?.executionMode}] Failed to send typing indicator: ${err}`));
+  await message.channel.sendTyping().catch(err => client.logger.debug(`[${ctx.command.command.name}:${config?.executionMode}] Failed to send typing indicator: ${err}`));
 
   try {
     const botData = await getBotInfoData(client);
+
+    const embedFields = botData.lavalinkNodesInfo.map(nodeInfo => ({
+      name: "<:ArrowForwardios:1362454729682194686> Lavalink Info",
+      value: nodeInfo.stats,
+      inline: false,
+    }));
 
     const embed = client.createEmbed({
       authorName: `${client.user.username} Bot Information`,
       authorIcon: client.user.displayAvatarURL(),
       description: `\`\`\`yml\nName: ${client.user.username} (${client.user.id})\nWebsocket Ping: ${client.ws.ping}ms\nAPI Ping: ${botData.apiPing}ms\n\`\`\``,
       fields: [
-        { name: "<:ArrowForwardios:1362454729682194686> General Info", value: `\`\`\`yml\nVersion              : v${pkg.version}\nCreated By           : @herjuna\nCreated At           : ${botData.botCreationDate}\nTotal Servers        : ${client.guilds.cache.size} servers\nTotal Commands       : ${commandkit.commandHandler.loadedCommands?.size || 'N/A'} commands\nTotal Players        : ${botData.lavalinkNodesInfo.playingPlayers} out of ${botData.lavalinkNodesInfo.totalPlayers}\nUptime               : ${botData.systemUptime}\n\`\`\`` },
-        { name: "<:ArrowForwardios:1362454729682194686> Lavalink Info", value: botData.lavalinkNodesInfo.statsText, inline: false, },
-        { name: "<:ArrowForwardios:1362454729682194686> Usage Stats", value: `\`\`\`yml\nCommands Used        : ${botData.commandsCount} times\nMessages Sent        : ${botData.messagesCount} messages\nSongs Played         : ${botData.tracksCount} songs\nPlaying Time         : ${botData.playTime}\n\`\`\``, inline: false, },
+        { name: "<:ArrowForwardios:1362454729682194686> General Info", value: `\`\`\`yml\nVersion              : v${pkg.version}\nCreated By           : @herjuna\nCreated At           : ${botData.botCreationDate}\nTotal Servers        : ${client.guilds.cache.size} servers\nTotal Commands       : ${commandkit.commandHandler.loadedCommands?.size || 'N/A'} commands\nTotal Players        : ${botData.lavalinkNodesInfo.reduce((acc, node) => acc + node.playingPlayers, 0)} out of ${botData.lavalinkNodesInfo.reduce((acc, node) => acc + node.totalPlayers, 0)}\nUptime               : ${botData.systemUptime}\n\`\`\`` },
+        ...embedFields,        
+        { name: "<:ArrowForwardios:1362454729682194686> Usage Stats", value: `\`\`\`yml\nCommands Used        : ${botData.commandsCount} times\nSongs Played         : ${botData.tracksCount} songs\nPlaying Time         : ${botData.playTime}\n\`\`\``, inline: false, },
       ],
       footerText: "Don't Forget to vote. That helps us a lot!",
       footerIcon: "https://blog.top.gg/content/images/2021/12/Avatar---New-Logo-2.png",
@@ -166,8 +179,8 @@ export const message = async (ctx) => {
     await message.reply({ embeds: [embed], components: [row], allowedMentions: { repliedUser: false } });
 
   } catch (err) {
-    logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Error executing command`, err);
+    client.logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Error executing command`, err);
     const errorEmbed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | An error occurred: ${err.message}`, allowedMentions: { repliedUser: false } });
-    await message.reply({ embeds: [errorEmbed] }).catch(errInner => logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Failed to send error reply:`, errInner));
+    await message.reply({ embeds: [errorEmbed] }).catch(errInner => client.logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Failed to send error reply:`, errInner));
   }
 };

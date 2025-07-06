@@ -1,9 +1,11 @@
-import { parseTimeString } from "../utils/time"; 
+import { parseTimeString } from "#utils/time"; 
 
 const config = {
   clientOptions: {
     clientToken: process.env.CLIENT_TOKEN || "", // Your bot's token
     clientId: process.env.CLIENT_ID || "", // Your bot's id
+    clientPrefix: process.env.CLIENT_PREFIX || "", // Your bot's prefix
+    clientName: process.env.CLIENT_NAME || "", // Your bot's name
     devId: process.env.DEV_ID?.split(",") || [""], // Your user id(s) for development purposes
     devGuild: process.env.DEV_GUILD?.split(",") || [""], // Your guild id(s) for development purposes
     mongoUri: process.env.MONGO_URI || "", // Your MongoDB URI
@@ -20,7 +22,8 @@ const config = {
   },
 
   riffyOptions: {
-    leaveTimeout: parseTimeString("15s"), // How long the bot will wait before leaving a voice channel when empty/queueEnd, default 1 minute
+    playerVolume: 50, // The volume of the player
+    leaveTimeout: parseTimeString("1m"), // How long the bot will wait before leaving a voice channel when empty/queueEnd, default 1 minute
     restVersion: "v4", // The REST version of lavalink you want to use
     reconnectTries: Infinity, // How many times to try reconnecting to lavalink
     reconnectTimeout: parseTimeString("6s"), // How long to wait before reconnecting to lavalink, default 6 seconds
@@ -31,11 +34,11 @@ const config = {
   },
 
   riffyNodes: [
-    {
+    { /* The default lavalink is a public lavalink by ajudev */
       name: "Lavalink", // The name of the node
-      host: "lavalink.beban.tech", // The hostname of the lavalink server
+      host: "lava-v4.ajieblogs.eu.org", // The hostname of the lavalink server
       port: 80,  // The port of the lavalink server
-      password: "bytebee_", // The password of lavalink server
+      password: "https://dsc.gg/ajidevserver", // The password of lavalink server
       secure: false, // Does the lavalink server use secure connection
     },
   ],
@@ -60,7 +63,7 @@ const config = {
       },
       {
       	name: "This bot is made by Beban Community🧡",
-        type: "CUSTOM_STATUS", 
+        type: "CUSTOM", 
             },
         ],
     },

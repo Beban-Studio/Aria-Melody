@@ -1,21 +1,21 @@
-import { incrementCommandCount } from '../../databases/managers/clientData'; 
+import { incrementCommandCount } from '#dbManagers/clientData'; 
 import { InteractionType } from 'discord.js'; 
+import * as logger from '#utils/logger';
 
 /**
  * @param {import('discord.js').Client<true>} client
  * @param {import('discord.js').Interaction} interaction
  */
-export default async function interactionLogging(client, interaction) { 
-
-  if (interaction.isCommand()) {
+export default async function interactionLogging(interaction, client) { 
+  if (interaction?.isChatInputCommand) {
     try {
       await incrementCommandCount(); 
-      client.logger.debug(`Incremented global command count`);
+      logger.debug(`Incremented global command count`);
     } catch (err) {
-      client.logger.error(`Failed to increment command count:`, err);
+      logger.error(`Failed to increment command count:`, err);
     }
   } else if (interaction.isButton()) {
-    client.logger.debug(`Button interaction: ${interaction.customId}`);
+    logger.debug(`Button interaction: ${interaction.customId}`);
   } 
 
   /*

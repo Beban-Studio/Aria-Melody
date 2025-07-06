@@ -1,6 +1,4 @@
-// src/app/commands/utility/bot-ping.js (or your specific path)
 import fetch from 'node-fetch';
-import * as logger from '../../utils/logger.js'; // Adjust path if needed
 
 /**
  * @type {import('commandkit').CommandData}
@@ -8,7 +6,7 @@ import * as logger from '../../utils/logger.js'; // Adjust path if needed
 export const command = {
   name: 'bot-ping',
   description: "Check the bot's latency and API response time.",
-  aliases: ['p', 'ping', 'latency', 'botping'],
+  aliases: ['ping', 'latency', 'botping'],
   contexts: [0, 1],
 };
 
@@ -32,7 +30,7 @@ export const chatInput = async (ctx) => {
       await fetch("https://discord.com/api/v10/gateway");
       apiPing = Date.now() - apiFetchStart;
     } catch (err) {
-      logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to fetch Discord API gateway for ping:`, err);
+      client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to fetch Discord API gateway for ping:`, err);
     }
 
     const processingLatency = Date.now() - interactionCreationTime;
@@ -48,7 +46,7 @@ export const chatInput = async (ctx) => {
     await interaction.editReply({ embeds: [responseEmbed] });
 
   } catch (err) {
-    logger.error(`[${interaction.commandName}:${config?.executionMode}] Error:`, err);
+    client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Error:`, err);
     const errorEmbed = client.createEmbed({
       description: `${client.emoji?.system?.xMark || '❌'} | Error: ${err.message}`
     });
@@ -59,7 +57,7 @@ export const chatInput = async (ctx) => {
         await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
       }
     } catch (errInner) {
-      logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to send/edit error reply:`, errInner);
+      client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Failed to send/edit error reply:`, errInner);
     }
   }
 };
@@ -82,7 +80,7 @@ export const message = async (ctx) => {
       await fetch("https://discord.com/api/v10/gateway");
       apiPing = Date.now() - apiFetchStart;
     } catch (err) {
-      logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Failed to fetch Discord API gateway for ping:`, err);
+      client.logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Failed to fetch Discord API gateway for ping:`, err);
     }
 
     const roundTripTime = initialMsg.createdTimestamp - message.createdTimestamp;
@@ -99,8 +97,8 @@ export const message = async (ctx) => {
     await initialMsg.edit({ embeds: [responseEmbed], content: null, allowedMentions: { repliedUser: false } });
 
   } catch (err) {
-    logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Error executing command:`, err);
+    client.logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Error executing command:`, err);
     const errorEmbed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | An error occurred: ${err.message}`, allowedMentions: { repliedUser: false } });
-    await message.reply({ embeds: [errorEmbed], allowedMentions: { repliedUser: false } }).catch(errInner => logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Failed to send error reply:`, errInner));
+    await message.reply({ embeds: [errorEmbed], allowedMentions: { repliedUser: false } }).catch(errInner => client.logger.error(`[${ctx.command.command.name}:${config?.executionMode}] Failed to send error reply:`, errInner));
   }
 };

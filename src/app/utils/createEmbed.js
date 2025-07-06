@@ -1,4 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
+import * as logger from './logger.js';
 import config from '../configurations/config';
 
 /**
@@ -31,82 +32,83 @@ import config from '../configurations/config';
  * @returns {EmbedBuilder}
  */
 export const createEmbed = function ({
-    title = '',
-    url = '',
-    description = '',
-    color = config.clientOptions.embedColor || '#0099ff', 
-    fields = [],
-    image = '',
-    thumbnail = '',
-    footerText = '',
-    footerIcon = null,
-    authorName = '',
-    authorIcon = null,
-    authorUrl = '',
-    timestamp = false
+  title = '',
+  url = '',
+  description = '',
+  color = config.clientOptions.embedColor || '#0099ff', 
+  fields = [],
+  image = '',
+  thumbnail = '',
+  footerText = '',
+  footerIcon = null,
+  authorName = '',
+  authorIcon = null,
+  authorUrl = '',
+  timestamp = false
 } = {}) { 
-    const embed = new EmbedBuilder()
-        .setColor(color);
+  const embed = new EmbedBuilder()
+    .setColor(color);
 
-    if (title) {
-        embed.setTitle(String(title).substring(0, 256));
-        if (url) {
-            embed.setURL(url);
-        }
+  if (title) {
+    embed.setTitle(String(title).substring(0, 256));
+
+    if (url) {
+      embed.setURL(url);
     }
+  }
 
-    if (description) {
-        embed.setDescription(String(description).substring(0, 4096));
+  if (description) {
+    embed.setDescription(String(description).substring(0, 4096));
+  }
+
+	if (image) {
+    embed.setImage(image);
+  }
+
+  if (thumbnail) {
+    embed.setThumbnail(thumbnail);
+  }
+
+  if (footerText) {
+    embed.setFooter({
+      text: String(footerText).substring(0, 2048),
+      iconURL: footerIcon || undefined 
+    });
+  }
+
+  if (authorName) {
+    embed.setAuthor({
+      name: String(authorName).substring(0, 256),
+      iconURL: authorIcon || undefined, 
+      url: authorUrl || undefined
+    });
+  }
+
+  if (timestamp) {
+    if (timestamp === true) {
+      embed.setTimestamp(); 
+    } else if (timestamp instanceof Date || typeof timestamp === 'number') {
+    	embed.setTimestamp(timestamp); 
     }
+  }
 
-    if (image) {
-        embed.setImage(image);
+  if (Array.isArray(fields) && fields.length > 0) {
+    const validFields = fields.slice(0, 25).map(field => {
+			if (!field || typeof field.name !== 'string' || typeof field.value !== 'string') {
+				logger.warn('Skipping invalid embed field:', field);
+				return null; 
+			}
+
+			return {
+				name: String(field.name).substring(0, 256),
+				value: String(field.value).substring(0, 1024),
+				inline: typeof field.inline === 'boolean' ? field.inline : false
+			};
+  	}).filter(field => field !== null); 
+
+      if (validFields.length > 0) {
+        embed.addFields(validFields);
+      }
     }
-
-    if (thumbnail) {
-        embed.setThumbnail(thumbnail);
-    }
-
-    if (footerText) {
-        embed.setFooter({
-            text: String(footerText).substring(0, 2048),
-            iconURL: footerIcon || undefined 
-        });
-    }
-
-    if (authorName) {
-        embed.setAuthor({
-            name: String(authorName).substring(0, 256),
-            iconURL: authorIcon || undefined, 
-            url: authorUrl || undefined
-        });
-    }
-
-    if (timestamp) {
-        if (timestamp === true) {
-            embed.setTimestamp(); 
-        } else if (timestamp instanceof Date || typeof timestamp === 'number') {
-            embed.setTimestamp(timestamp); 
-        }
-    }
-
-    if (Array.isArray(fields) && fields.length > 0) {
-        const validFields = fields.slice(0, 25).map(field => {
-            if (!field || typeof field.name !== 'string' || typeof field.value !== 'string') {
-                console.warn('Skipping invalid field:', field);
-                return null; 
-            }
-            return {
-                name: String(field.name).substring(0, 256),
-                value: String(field.value).substring(0, 1024),
-                inline: typeof field.inline === 'boolean' ? field.inline : false
-            };
-        }).filter(field => field !== null); 
-
-        if (validFields.length > 0) {
-            embed.addFields(validFields);
-        }
-    }
-
-    return embed;
-}
+  return embed;
+};
