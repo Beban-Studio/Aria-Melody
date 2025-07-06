@@ -130,7 +130,6 @@ SPOTIFY_SECRET=YOUR_SPOTIFY_APPLICATION_CLIENT_SECRET_HERE
 # Default search platform for music commands (e.g., spsearch, ytsearch, scsearch, amsearch, dzsearch)
 # Defaults to "spsearch" in your config.js if this is not set.
 DEFAULT_SEARCH_PLATFORM=spsearch
-LOGGER_WEBHOOK_URL=YOUR_DISCORD_WEBHOOK_URL_FOR_LOGS
 ```
 -   Build bot code assets using Commandkit@dev compiler:
 ```bash
