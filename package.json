@@ -12,8 +12,8 @@
     "build": "commandkit build",
     "start": "commandkit start"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["discord", "music", "bot", "lavalink", "riffy", "commandkit", "javascript", "beban-studio"],
+  "author": "Beban Studio",
   "license": "MIT",
   "type": "module",
   "dependencies": {
