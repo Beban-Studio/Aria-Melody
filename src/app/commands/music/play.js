@@ -15,7 +15,7 @@ export const command = {
       description: 'A song name or URL.',
       type: ApplicationCommandOptionType.String,
       required: true,
-      autocomplete: false,
+      autocomplete: true,
     },
   ],
 };
@@ -52,24 +52,13 @@ function checkUrl(link) {
 async function _handlePlay(ctx, botReply = null) { 
   const { client, guild, channel } = ctx;
 
-  const message = ctx.isChatInputCommand() ? ctx.interaction.editReply : botReply.edit.bind(botReply); 
+  const message = ctx.isChatInputCommand() ? ctx.interaction.editReply.bind(ctx.interaction) : botReply.edit.bind(botReply);
   const member = ctx.isChatInputCommand() ? ctx.interaction.member : ctx.message.member;
   const query = ctx.isChatInputCommand() ? ctx.options.getString('query') : ctx.args().join(' ');
   const voiceChannel = member?.voice?.channel;
 
-  if (!voiceChannel) {
-    const embed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | You must be in a voice channel to use this command.` });
-    await message({ embeds: [embed] })
-    return;
-  }
-
-  if (client.riffy?.players.get(guild.id) && client.riffy.players.get(guild.id).voiceChannel !== voiceChannel.id) {
-    const embed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | You must be in the same voice channel as me.` });
-    await message({ embeds: [embed] })
-    return;
-  }
-
   let player = client.riffy.players.get(guild.id);
+
   if (!player) {
     player = client.riffy.createConnection({
       guildId: guild.id,
@@ -128,8 +117,9 @@ export const chatInput = async (ctx) => {
     await interaction.deferReply(); 
     await interaction.editReply({ embeds: [client.createEmbed({ description: "`🔎` | Searching..." })] }); 
     await _handlePlay(ctx);
+
   } catch (err) {
-    client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Error:`, err);
+    client.logger.error(`[${interaction.commandName}:${config?.executionMode}] Error:`, err.stack);
     const errorEmbed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | An unexpected error occurred: ${err.message}` });
     await interaction.editReply({ embeds: [errorEmbed] }).catch(() => {});
   }
@@ -154,6 +144,7 @@ export const message = async (ctx) => {
       allowedMentions: { repliedUser: false }
     });
     await _handlePlay(ctx, botReply); 
+    
   } catch (err) {
     client.logger.error(`[${command.name}:${config?.executionMode}] Error:`, err);
     const errorEmbed = client.createEmbed({ description: `${client.emoji?.system?.xMark || '❌'} | An unexpected error occurred: ${err.message}` });
@@ -161,4 +152,53 @@ export const message = async (ctx) => {
   }
 };
 
+export const autocomplete = async (ctx) => {
+	const { interaction, client } = ctx;
 
+  const focusedValue = interaction.options.getFocused();
+  const urlCheck = checkUrl(focusedValue);
+
+  if (urlCheck) {
+    const response = [{
+      name: `${urlCheck.type}`,
+      value: urlCheck.url
+    }];
+
+  	return interaction.respond(response);
+  }
+
+  if (focusedValue.length < 3) {
+    return interaction.respond([
+    	{ name: "Keep typing to search for a song...", value: "placeholder_typing" }
+    ]);
+  }
+
+	try {
+  	if (!client.spotify) {
+    	logger.warn('Spotify API client not configured on the client object');
+      return interaction.respond([]);
+    }
+
+    const searchResults = await client.spotify.searchTracks(focusedValue, { limit: 10 });
+
+    if (!searchResults.body.tracks || searchResults.body.tracks.items.length === 0) {
+      return interaction.respond([
+        { name: `🤔 No results found for "${focusedValue}"`, value: "https://open.spotify.com/track/4PTG3Z6ehGkBFwjybzWkR8?si=f6881f37b24248ab" }
+    	]);
+    }
+
+    const choices = searchResults.body.tracks.items.map(track => {
+			const artists = track.artists.map(artist => artist.name);
+			const artistString = artists.length > 2 ? `${artists.slice(0, 2).join(', ')} & others` : artists.join(', ');
+			return {
+				name: `${track.name} - ${artistString}`,
+				value: track.external_urls.spotify
+			};
+  	});
+
+  	await interaction.respond(choices);
+
+  } catch (err) {
+    logger.warn('Error fetching Spotify autocomplete results:', err);
+  }
+};
